@@ -1,39 +1,198 @@
-<div style="position: relative;">
-  <div id="graph-container" style="background-color: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; min-height: 600px;"></div>
-  <div style="position: absolute; bottom: 1rem; right: 1rem; font-size: 0.75rem; color: var(--text-muted); background: var(--bg-primary); padding: 0.5rem 0.75rem; border-radius: 4px; border: 1px solid var(--border); font-family: var(--font-code); z-index: 10;">
-    💡 Scroll to zoom • Drag to pan • Click to navigate • Right-click for new tab
+<style>
+  #graph-wrapper {
+    position: relative;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  #graph-container {
+    min-height: 600px;
+  }
+  #graph-controls {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    gap: 0.35rem;
+    z-index: 10;
+  }
+  #graph-controls button {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    line-height: 1;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    padding: 0;
+  }
+  #graph-controls button:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+  }
+  #graph-controls button.active {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+  }
+  #graph-legend {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    display: flex;
+    gap: 1rem;
+    font-size: 0.7rem;
+    font-family: var(--font-code);
+    color: var(--text-muted);
+    background: var(--bg-primary);
+    padding: 0.4rem 0.7rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    z-index: 10;
+  }
+  #graph-legend span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  #graph-legend .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  #graph-hint {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.65rem;
+    font-family: var(--font-code);
+    color: var(--text-muted);
+    background: var(--bg-primary);
+    padding: 0.35rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    z-index: 10;
+    opacity: 0.8;
+  }
+  #graph-tooltip {
+    position: absolute;
+    pointer-events: none;
+    z-index: 20;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: none;
+    max-width: 250px;
+    line-height: 1.4;
+  }
+  #graph-tooltip .tooltip-title {
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+  #graph-tooltip .tooltip-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+  #graph-search {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 10;
+    display: none;
+  }
+  #graph-search input {
+    width: 200px;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    outline: none;
+  }
+  #graph-search input:focus {
+    border-color: var(--accent);
+  }
+  /* Fullscreen mode */
+  #graph-wrapper.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    border-radius: 0;
+    border: none;
+  }
+  #graph-wrapper.fullscreen #graph-container {
+    min-height: 100vh;
+  }
+</style>
+
+<div id="graph-wrapper">
+  <div id="graph-container"></div>
+  <div id="graph-controls">
+    <button id="btn-search" title="Search nodes (/)">⌕</button>
+    <button id="btn-zoom-in" title="Zoom in (+)">+</button>
+    <button id="btn-zoom-out" title="Zoom out (−)">−</button>
+    <button id="btn-fit" title="Fit to view (F)">⊡</button>
+    <button id="btn-fullscreen" title="Fullscreen (⇧F)">⛶</button>
+  </div>
+  <div id="graph-search">
+    <input type="text" id="search-input" placeholder="Search notes..." autocomplete="off" />
+  </div>
+  <div id="graph-legend">
+    <span><span class="dot" style="background:#10b981"></span> Evergreen</span>
+    <span><span class="dot" style="background:#3b82f6"></span> Growing</span>
+    <span><span class="dot" style="background:#f59e0b"></span> Seedling</span>
+  </div>
+  <div id="graph-hint">Scroll to zoom · Drag to pan · Click to visit</div>
+  <div id="graph-tooltip">
+    <div class="tooltip-title"></div>
+    <div class="tooltip-meta"></div>
   </div>
 </div>
 
 <script src="https://unpkg.com/d3@7"></script>
 <script src="https://unpkg.com/force-graph"></script>
 <script>
+(function() {
+  const isDark = () => document.body.classList.contains('dark-theme');
+
   fetch('{{ "index.json" | relURL }}')
     .then(res => res.ok ? res.json() : Promise.reject('Failed to load'))
     .then(data => {
-      // Filter out source pages
       const allPages = data.filter(page => page.type !== 'source');
-      
       if (allPages.length === 0) {
-        document.getElementById('graph-container').innerHTML = 
-          '<p style="text-align: center; padding: 3rem; color: var(--text-muted);">No pages found.</p>';
+        document.getElementById('graph-container').innerHTML =
+          '<p style="text-align:center;padding:3rem;color:var(--text-muted)">No pages found.</p>';
         return;
       }
-      
-      // Build a map of all pages by title (id)
+
       const pageMap = new Map();
-      allPages.forEach(page => {
-        pageMap.set(page.id, page);
-      });
-      
-      // Collect all unique node IDs (both sources and targets)
+      allPages.forEach(page => pageMap.set(page.id, page));
+
       const nodeIds = new Set();
       const links = [];
-      
+
       allPages.forEach(source => {
         if (source.links && source.links.length > 0) {
           source.links.forEach(targetId => {
-            // Only add links if target exists and is not a source
             if (pageMap.has(targetId) && source.id !== targetId) {
               nodeIds.add(source.id);
               nodeIds.add(targetId);
@@ -42,123 +201,353 @@
           });
         }
       });
-      
+
       if (links.length === 0) {
-        document.getElementById('graph-container').innerHTML = 
-          '<p style="text-align: center; padding: 3rem; color: var(--text-muted);">No connections yet. Start linking notes.</p>';
+        document.getElementById('graph-container').innerHTML =
+          '<p style="text-align:center;padding:3rem;color:var(--text-muted)">No connections yet.</p>';
         return;
       }
-      
-      // Create nodes for all connected pages
+
+      // Precompute connection counts
+      const connectionCount = {};
+      links.forEach(l => {
+        connectionCount[l.source] = (connectionCount[l.source] || 0) + 1;
+        connectionCount[l.target] = (connectionCount[l.target] || 0) + 1;
+      });
+
       const nodes = Array.from(nodeIds).map(id => {
         const page = pageMap.get(id);
         if (!page) return null;
-        
-        // Count both incoming and outgoing links
-        const outgoingLinks = (page.links || []).filter(linkId => pageMap.has(linkId) && linkId !== id).length;
-        const incomingLinks = links.filter(link => link.target === id).length;
-        const totalConnections = outgoingLinks + incomingLinks;
-        
+        const conn = connectionCount[id] || 1;
         return {
           id: page.id,
           url: page.url,
           status: page.status || 'seeding',
-          val: Math.max(totalConnections, 1) // Ensure minimum size
+          connections: conn,
+          val: conn
         };
       }).filter(n => n !== null);
 
       const container = document.getElementById('graph-container');
-      const containerWidth = container.offsetWidth;
+      const wrapper = document.getElementById('graph-wrapper');
+      const tooltip = document.getElementById('graph-tooltip');
+      const tooltipTitle = tooltip.querySelector('.tooltip-title');
+      const tooltipMeta = tooltip.querySelector('.tooltip-meta');
+      const containerWidth = wrapper.offsetWidth;
+
+      const statusColor = (status) => {
+        if (status === 'evergreen') return '#10b981';
+        if (status === 'growing') return '#3b82f6';
+        return '#f59e0b';
+      };
+
+      let highlightNode = null;
+      let highlightLinks = new Set();
+      let highlightNeighbors = new Set();
+      let searchMatch = null;
+
+      // Label deconfliction: collect label rects during node draw, render in second pass
+      let pendingLabels = [];
 
       const Graph = ForceGraph()
         (container)
         .graphData({ nodes, links })
         .width(containerWidth)
         .height(600)
-        .nodeLabel('id')
-        .nodeRelSize(10)
-        .nodeColor(node => {
-          if (node.status === 'evergreen') return '#10b981';
-          if (node.status === 'growing') return '#3b82f6';
-          return '#f59e0b';
-        })
+        .nodeLabel('')
+        .nodeRelSize(6)
+        .nodeCanvasObjectMode(() => 'replace')
         .nodeCanvasObject((node, ctx, globalScale) => {
-          // Scale node size based on zoom level for better visibility
-          const minSize = 8;
-          const maxSize = 16;
-          const size = Math.max(minSize, Math.min(maxSize, 10 + (node.val || 1) * 0.5));
-          
-          // Draw node circle
+          const isHighlighted = highlightNode === node;
+          const isNeighbor = highlightNeighbors.has(node.id);
+          const isDimmed = highlightNode && !isHighlighted && !isNeighbor;
+          const isSearched = searchMatch === node.id;
+
+          // Dynamic sizing: base size from connections, clamped
+          const baseSize = Math.max(4, Math.min(14, 3 + Math.sqrt(node.connections) * 2.5));
+          const size = isHighlighted ? baseSize * 1.4 : (isSearched ? baseSize * 1.6 : baseSize);
+
+          const alpha = isDimmed ? 0.12 : 1;
+          const color = statusColor(node.status);
+
+          // Glow for highlighted/searched nodes
+          if (isHighlighted || isSearched) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, size + 6, 0, 2 * Math.PI);
+            const gradient = ctx.createRadialGradient(node.x, node.y, size, node.x, node.y, size + 6);
+            gradient.addColorStop(0, color + '40');
+            gradient.addColorStop(1, color + '00');
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            ctx.restore();
+          }
+
+          // Node circle
           ctx.beginPath();
-          ctx.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
-          ctx.fillStyle = node.color || (node.status === 'evergreen' ? '#10b981' : node.status === 'growing' ? '#3b82f6' : '#f59e0b');
+          ctx.arc(node.x, node.y, size, 0, 2 * Math.PI);
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = color;
           ctx.fill();
-          
-          // Add a border to make nodes stand out
-          const isDark = document.body.classList.contains('dark-theme');
-          ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.2)';
-          ctx.lineWidth = 1.5;
+
+          // Border
+          ctx.strokeStyle = isDark() ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.12)';
+          ctx.lineWidth = isHighlighted ? 2 : 1;
           ctx.stroke();
-          
-          // Draw label only if zoomed in enough
-          if (globalScale > 0.5) {
+          ctx.globalAlpha = 1;
+
+          // Queue label for deconflicted rendering
+          const showLabel = isHighlighted || isNeighbor || isSearched || (globalScale > 1.8 && !isDimmed);
+          if (showLabel) {
             const label = node.id;
-            const fontSize = Math.max(10, Math.min(14, 12 / globalScale));
-            ctx.font = `${fontSize}px IBM Plex Mono, monospace`;
+            const fontSize = isHighlighted || isSearched
+              ? Math.max(11, 13 / globalScale)
+              : Math.max(8, 10 / globalScale);
+            ctx.font = `500 ${fontSize}px 'IBM Plex Mono', monospace`;
+            const textWidth = ctx.measureText(label).width;
+            const padding = 3;
+            const baseY = node.y + size + 4;
+            pendingLabels.push({
+              label, fontSize, textWidth, padding,
+              x: node.x, baseY, isDimmed,
+              priority: isHighlighted ? 2 : (isSearched ? 2 : 1)
+            });
+          }
+        })
+        .onRenderFramePost((ctx, globalScale) => {
+          if (pendingLabels.length === 0) return;
+
+          // Sort: higher priority labels placed first (they won't be nudged)
+          pendingLabels.sort((a, b) => b.priority - a.priority);
+
+          // Place labels with collision avoidance
+          const placed = [];
+          for (const lbl of pendingLabels) {
+            const h = lbl.fontSize + lbl.padding * 2;
+            const w = lbl.textWidth + lbl.padding * 2;
+            let y = lbl.baseY;
+
+            // Check against already placed labels and nudge down if overlapping
+            let attempts = 0;
+            while (attempts < 4) {
+              const rect = { x: lbl.x - w / 2, y: y - 1, w, h };
+              const overlaps = placed.some(p =>
+                rect.x < p.x + p.w && rect.x + rect.w > p.x &&
+                rect.y < p.y + p.h && rect.y + rect.h > p.y
+              );
+              if (!overlaps) break;
+              y += h + 2;
+              attempts++;
+            }
+
+            // Draw background pill
+            ctx.fillStyle = isDark() ? 'rgba(30,30,30,0.85)' : 'rgba(250,250,250,0.85)';
+            ctx.beginPath();
+            ctx.roundRect(lbl.x - w / 2, y - 1, w, h, 3);
+            ctx.fill();
+
+            // Draw text
+            ctx.font = `500 ${lbl.fontSize}px 'IBM Plex Mono', monospace`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
-            
-            // Get text color - ensure it's visible in both modes
-            const textColor = isDark ? '#d8dee9' : '#2e3440';
-            ctx.fillStyle = textColor;
-            
-            // Position label below node
-            ctx.fillText(label, node.x, node.y + size + 8);
+            ctx.fillStyle = lbl.isDimmed
+              ? (isDark() ? '#555' : '#bbb')
+              : (isDark() ? '#d8dee9' : '#2e3440');
+            ctx.fillText(lbl.label, lbl.x, y + lbl.padding - 1);
+
+            placed.push({ x: lbl.x - w / 2, y: y - 1, w, h });
           }
+          pendingLabels = [];
         })
         .nodePointerAreaPaint((node, color, ctx) => {
+          const size = Math.max(8, 3 + Math.sqrt(node.connections) * 2.5) + 4;
           ctx.fillStyle = color;
-          const size = 15;
-          ctx.fillRect(node.x - size, node.y - size, size * 2, size * 2);
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, size, 0, 2 * Math.PI);
+          ctx.fill();
         })
-        .linkColor(() => {
-          const isDark = document.body.classList.contains('dark-theme');
-          return isDark ? '#4a4a4a' : '#d0d0d0';
-        })
-        .linkWidth(1.5)
-        .onNodeClick(node => {
-          if (node && node.url) {
-            window.location.href = node.url;
+        .linkCanvasObjectMode(() => 'replace')
+        .linkCanvasObject((link, ctx) => {
+          const isHighlightedLink = highlightLinks.has(link);
+          const isDimmed = highlightNode && !isHighlightedLink;
+
+          ctx.beginPath();
+          ctx.moveTo(link.source.x, link.source.y);
+          ctx.lineTo(link.target.x, link.target.y);
+
+          if (isHighlightedLink) {
+            ctx.strokeStyle = isDark() ? 'rgba(136,192,208,0.6)' : 'rgba(94,129,172,0.6)';
+            ctx.lineWidth = 2;
+          } else {
+            ctx.globalAlpha = isDimmed ? 0.04 : 1;
+            ctx.strokeStyle = isDark() ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+            ctx.lineWidth = 1;
           }
+          ctx.stroke();
+          ctx.globalAlpha = 1;
         })
         .onNodeHover(node => {
           container.style.cursor = node ? 'pointer' : 'default';
-        })
-        .onNodeRightClick(node => {
-          if (node && node.url) {
-            window.open(node.url, '_blank');
+          highlightNode = node || null;
+          highlightLinks = new Set();
+          highlightNeighbors = new Set();
+
+          if (node) {
+            links.forEach(l => {
+              const src = typeof l.source === 'object' ? l.source.id : l.source;
+              const tgt = typeof l.target === 'object' ? l.target.id : l.target;
+              if (src === node.id || tgt === node.id) {
+                highlightLinks.add(l);
+                highlightNeighbors.add(src);
+                highlightNeighbors.add(tgt);
+              }
+            });
+            // Show tooltip
+            tooltipTitle.textContent = node.id;
+            const statusLabel = node.status === 'evergreen' ? '🌳 Evergreen'
+              : node.status === 'growing' ? '🌿 Growing' : '🌱 Seedling';
+            tooltipMeta.textContent = statusLabel + ' · ' + node.connections + ' connections';
+            tooltip.style.display = 'block';
+          } else {
+            tooltip.style.display = 'none';
           }
         })
-        .cooldownTicks(200)
-        .zoom(1.0)  // Start zoomed out to see all nodes
-        .enableNodeDrag(true)  // Allow dragging nodes like Obsidian
-        .enableZoomInteraction(true)  // Enable zoom with mouse wheel
-        .enablePanInteraction(true);  // Enable panning
-        
-      // Apply d3 forces with better spacing
-      Graph.d3Force('charge').strength(-1500);
-      Graph.d3Force('link').distance(150);
-      Graph.d3Force('center').strength(0.1);
-      Graph.d3Force('collide', d3.forceCollide(100));
-      
-      // Auto-fit after initial layout
-      setTimeout(() => {
-        Graph.zoomToFit(400, 50);
-      }, 1000);
+        .onNodeClick(node => {
+          if (node && node.url) window.location.href = node.url;
+        })
+        .onNodeRightClick(node => {
+          if (node && node.url) window.open(node.url, '_blank');
+        })
+        .onBackgroundClick(() => {
+          searchMatch = null;
+          document.getElementById('search-input').value = '';
+          document.getElementById('graph-search').style.display = 'none';
+        })
+        .cooldownTicks(300)
+        .autoPauseRedraw(false)
+        .enableNodeDrag(true)
+        .enableZoomInteraction(true)
+        .enablePanInteraction(true);
+
+      // Better physics — generous spacing so labels don't overlap
+      Graph.d3Force('charge').strength(-1200).distanceMax(600);
+      Graph.d3Force('link').distance(120).strength(0.2);
+      Graph.d3Force('center').strength(0.05);
+      Graph.d3Force('collide', d3.forceCollide().radius(n => Math.max(8, 3 + Math.sqrt(n.connections) * 2.5) + 35).strength(0.8));
+
+      // Track mouse for tooltip positioning
+      wrapper.addEventListener('mousemove', e => {
+        const rect = wrapper.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        // Flip tooltip when near edges
+        const tipWidth = 260;
+        const tipHeight = 50;
+        tooltip.style.left = (x + tipWidth > rect.width) ? (x - tipWidth - 10) + 'px' : (x + 15) + 'px';
+        tooltip.style.top = (y + tipHeight > rect.height) ? (y - tipHeight - 10) + 'px' : (y + 15) + 'px';
+      });
+
+      // Auto-fit after layout settles
+      setTimeout(() => Graph.zoomToFit(400, 60), 1200);
+
+      // Controls
+      document.getElementById('btn-zoom-in').addEventListener('click', () => {
+        Graph.zoom(Graph.zoom() * 1.5, 300);
+      });
+      document.getElementById('btn-zoom-out').addEventListener('click', () => {
+        Graph.zoom(Graph.zoom() / 1.5, 300);
+      });
+      document.getElementById('btn-fit').addEventListener('click', () => {
+        searchMatch = null;
+        document.getElementById('search-input').value = '';
+        Graph.zoomToFit(400, 60);
+      });
+
+      // Search
+      const searchBox = document.getElementById('graph-search');
+      const searchInput = document.getElementById('search-input');
+      document.getElementById('btn-search').addEventListener('click', () => {
+        const visible = searchBox.style.display === 'block';
+        searchBox.style.display = visible ? 'none' : 'block';
+        if (!visible) {
+          searchInput.focus();
+        } else {
+          searchInput.value = '';
+          searchMatch = null;
+        }
+      });
+
+      searchInput.addEventListener('input', () => {
+        const q = searchInput.value.toLowerCase().trim();
+        if (!q) { searchMatch = null; return; }
+        const match = nodes.find(n => n.id.toLowerCase().includes(q));
+        if (match) {
+          searchMatch = match.id;
+          Graph.centerAt(match.x, match.y, 600);
+          Graph.zoom(3, 600);
+        } else {
+          searchMatch = null;
+        }
+      });
+
+      searchInput.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          searchBox.style.display = 'none';
+          searchInput.value = '';
+          searchMatch = null;
+          searchInput.blur();
+          e.stopPropagation(); // Don't also exit fullscreen
+        }
+        if (e.key === 'Enter' && searchMatch) {
+          const match = nodes.find(n => n.id === searchMatch);
+          if (match && match.url) window.location.href = match.url;
+        }
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', e => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === '/' || e.key === 's') {
+          e.preventDefault();
+          searchBox.style.display = 'block';
+          searchInput.focus();
+        }
+        if (e.key === 'F' && e.shiftKey) { e.preventDefault(); toggleFullscreen(); }
+        else if (e.key === 'Escape' && isFullscreen) { toggleFullscreen(); }
+        else if (e.key === 'f' && !e.shiftKey) Graph.zoomToFit(400, 60);
+        if (e.key === '+' || e.key === '=') Graph.zoom(Graph.zoom() * 1.5, 300);
+        if (e.key === '-') Graph.zoom(Graph.zoom() / 1.5, 300);
+      });
+
+      // Fullscreen toggle
+      let isFullscreen = false;
+      const btnFullscreen = document.getElementById('btn-fullscreen');
+      const toggleFullscreen = () => {
+        isFullscreen = !isFullscreen;
+        wrapper.classList.toggle('fullscreen', isFullscreen);
+        btnFullscreen.classList.toggle('active', isFullscreen);
+        btnFullscreen.textContent = isFullscreen ? '⛶' : '⛶';
+        btnFullscreen.title = isFullscreen ? 'Exit fullscreen (Esc)' : 'Fullscreen (⇧F)';
+        // Resize graph to fill new dimensions
+        setTimeout(() => {
+          Graph.width(wrapper.offsetWidth);
+          Graph.height(wrapper.offsetHeight || window.innerHeight);
+          Graph.zoomToFit(400, 60);
+        }, 50);
+      };
+      btnFullscreen.addEventListener('click', toggleFullscreen);
+
+      // Handle window resize
+      const resizeObserver = new ResizeObserver(() => {
+        Graph.width(wrapper.offsetWidth);
+        if (isFullscreen) Graph.height(window.innerHeight);
+      });
+      resizeObserver.observe(wrapper);
     })
     .catch(error => {
       console.error('Graph error:', error);
-      document.getElementById('graph-container').innerHTML = 
-        '<p style="text-align: center; padding: 3rem; color: var(--text-muted);">Could not load graph.</p>';
+      document.getElementById('graph-container').innerHTML =
+        '<p style="text-align:center;padding:3rem;color:var(--text-muted)">Could not load graph.</p>';
     });
+})();
 </script>
