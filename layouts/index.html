@@ -1,39 +1,277 @@
 {{ define "main" }}
-<div class="container">
-    
-    <!-- Main Content -->
-    {{ with .Content }}
-    <div class="content">
+
+{{- /* ── Precompute data ── */ -}}
+{{- $allNotes := where site.RegularPages "Params.type" "!=" "source" -}}
+{{- $totalNotes := len $allNotes -}}
+
+{{- /* Count by status */ -}}
+{{- $evergreen := where $allNotes "Params.status" "evergreen" -}}
+{{- $growing := where $allNotes "Params.status" "growing" -}}
+{{- $seeding := where $allNotes "Params.status" "seeding" -}}
+
+{{- /* Recently updated (by lastmod, fallback to date) */ -}}
+{{- $recentlyTended := first 8 (sort $allNotes "Lastmod" "desc") -}}
+
+{{- /* Compute connection counts for "most connected" */ -}}
+{{- $linkCounts := dict -}}
+{{- range $allNotes -}}
+  {{- $content := .RawContent -}}
+  {{- $markdownLinks := findRE `\[([^\]]+)\]\(([^\)]+)\)` $content -}}
+  {{- range $markdownLinks -}}
+    {{- $linkDest := replaceRE `\[([^\]]+)\]\(([^\)]+)\)` "$2" . -}}
+    {{- if not (or (hasPrefix $linkDest "http") (hasPrefix $linkDest "https") (hasPrefix $linkDest "mailto:") (hasPrefix $linkDest "#")) -}}
+      {{- if hasPrefix $linkDest "/notes/" -}}
+        {{- range site.RegularPages -}}
+          {{- if or (eq .RelPermalink $linkDest) (eq (printf "/notes/%s/" .File.ContentBaseName) $linkDest) -}}
+            {{- $key := .Title -}}
+            {{- $prev := index $linkCounts $key | default 0 -}}
+            {{- $linkCounts = merge $linkCounts (dict $key (add $prev 1)) -}}
+            {{- break -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Sort pages by connection count */ -}}
+{{- $pagesWithCounts := slice -}}
+{{- range $allNotes -}}
+  {{- $count := index $linkCounts .Title | default 0 -}}
+  {{- if gt $count 2 -}}
+    {{- $pagesWithCounts = $pagesWithCounts | append (dict "page" . "count" $count) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Build tag groups for topic browsing */ -}}
+{{- $tagGroups := dict
+  "Engineering & Systems" (slice "engineering" "software-architecture" "distributed-systems" "infrastructure" "devops" "federation" "protocols")
+  "Decision & Strategy" (slice "strategy" "leadership" "decision-making" "framework" "prioritization")
+  "Mindset & Growth" (slice "mindset" "personal-growth" "resilience" "philosophy" "communication")
+  "Research & Craft" (slice "note-taking" "zettelkasten" "process" "research" "writing")
+  "Product & Metrics" (slice "product" "metrics" "measurement" "lean" "marketing")
+  "Law & Society" (slice "law" "cybercrime" "rights" "society")
+  "Stories & Culture" (slice "storytelling" "history" "etymology" "culture")
+-}}
+
+<div class="garden-home">
+
+  {{- /* ── HERO SECTION ── */ -}}
+  <header class="garden-hero">
+    <div class="garden-hero-content">
+      {{ with .Content }}
+      <div class="garden-intro">
         {{ . | safeHTML }}
-    </div>
-    {{ end }}
-
-    <!-- Knowledge Graph -->
-    <div style="margin: 3rem 0;">
-        <h2>Network</h2>
-        {{ partial "graph.html" . }}
+      </div>
+      {{ end }}
     </div>
 
-    <!-- Recent Notes -->
-    <div style="margin: 3rem 0;">
-        <h2>Recent</h2>
-        <ul class="recent-list">
-            {{ range first 5 (where site.RegularPages "Params.type" "!=" "source") }}
-            <li>
-                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-                <div class="recent-meta">
-                    {{ .Date.Format "2006-01-02" }}
-                    {{ with .Params.status }}
-                    · <span class="status status-{{ . }}">
-                        {{ if eq . "evergreen" }}🌳{{ else if eq . "growing" }}🌿{{ else }}🌱{{ end }}
-                        {{ . }}
-                    </span>
-                    {{ end }}
-                </div>
-            </li>
-            {{ end }}
+    <div class="garden-sidebar">
+      <div class="garden-stats">
+        <div class="stat">
+          <span class="stat-value">{{ $totalNotes }}</span>
+          <span class="stat-label">notes</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value stat-evergreen">{{ len $evergreen }}</span>
+          <span class="stat-label">evergreen</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value stat-growing">{{ len $growing }}</span>
+          <span class="stat-label">growing</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value stat-seeding">{{ len $seeding }}</span>
+          <span class="stat-label">seedlings</span>
+        </div>
+      </div>
+      <div class="garden-actions">
+        <button class="garden-action-btn" id="random-note" title="Open a random note">
+          <span class="action-icon">&rarr;</span> Random note
+        </button>
+        <a href="{{ "/notes/friends/" | relURL }}" class="garden-action-link">Fellow gardeners</a>
+        <a href="{{ "/notes/digital_garden/" | relURL }}" class="garden-action-link">What is a digital garden?</a>
+      </div>
+    </div>
+
+    {{- /* Random note data for JS */ -}}
+    <script>
+      document.getElementById('random-note').addEventListener('click', function() {
+        var urls = [{{ range $allNotes }}"{{ .RelPermalink }}",{{ end }}];
+        window.location.href = urls[Math.floor(Math.random() * urls.length)];
+      });
+    </script>
+  </header>
+
+  {{- /* ── ENTRY POINTS: Recently Tended + Most Connected ── */ -}}
+  <section class="garden-dual">
+    <div class="garden-column">
+      <h2 class="section-heading">
+        <span class="section-icon">~</span> Recently Tended
+      </h2>
+      <ul class="garden-list">
+        {{- range $recentlyTended }}
+        <li class="garden-list-item">
+          <a href="{{ .RelPermalink }}" class="garden-list-link">
+            <span class="garden-list-title">{{ .Title }}</span>
+            <span class="garden-list-meta">
+              <span class="status-dot status-dot-{{ .Params.status | default "seeding" }}"></span>
+              {{ .Lastmod.Format "Jan 2" }}
+            </span>
+          </a>
+        </li>
+        {{- end }}
+      </ul>
+    </div>
+
+    <div class="garden-column">
+      <h2 class="section-heading">
+        <span class="section-icon">*</span> Most Connected
+      </h2>
+      <ul class="garden-list">
+        {{- /* Sort by count descending using a simple approach */ -}}
+        {{- $sorted := sort $pagesWithCounts "count" "desc" -}}
+        {{- range first 8 $sorted }}
+        {{- $pg := .page -}}
+        {{- $ct := .count -}}
+        <li class="garden-list-item">
+          <a href="{{ $pg.RelPermalink }}" class="garden-list-link">
+            <span class="garden-list-title">{{ $pg.Title }}</span>
+            <span class="garden-list-meta">
+              <span class="status-dot status-dot-{{ $pg.Params.status | default "seeding" }}"></span>
+              {{ $ct }} links
+            </span>
+          </a>
+        </li>
+        {{- end }}
+      </ul>
+    </div>
+  </section>
+
+  {{- /* ── NETWORK GRAPH ── */ -}}
+  <section class="garden-section">
+    <h2 class="section-heading">
+      <span class="section-icon">#</span> Network
+    </h2>
+    {{ partial "graph.html" . }}
+  </section>
+
+  {{- /* ── BROWSE BY TOPIC ── */ -}}
+  <section class="garden-section">
+    <h2 class="section-heading">
+      <span class="section-icon">&gt;</span> Browse by Topic
+    </h2>
+
+    <div class="topic-grid">
+      {{- range $groupName, $groupTags := $tagGroups }}
+      {{- $groupPages := slice -}}
+      {{- range $allNotes -}}
+        {{- $pageTags := .Params.tags | default slice -}}
+        {{- $matched := false -}}
+        {{- range $pageTags -}}
+          {{- $tag := . -}}
+          {{- range $groupTags -}}
+            {{- if eq $tag . -}}
+              {{- $matched = true -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+        {{- if $matched -}}
+          {{- $groupPages = $groupPages | append . -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- if gt (len $groupPages) 0 }}
+      <details class="topic-card">
+        <summary class="topic-card-header">
+          <span class="topic-card-name">{{ $groupName }}</span>
+          <span class="topic-card-count">{{ len $groupPages }}</span>
+        </summary>
+        <ul class="topic-card-list">
+          {{- range $groupPages }}
+          <li>
+            <a href="{{ .RelPermalink }}">
+              <span class="status-dot status-dot-{{ .Params.status | default "seeding" }}"></span>
+              {{ .Title }}
+            </a>
+          </li>
+          {{- end }}
         </ul>
+      </details>
+      {{- end }}
+      {{- end }}
     </div>
+  </section>
+
+  {{- /* ── ALL NOTES ── */ -}}
+  <section class="garden-section">
+    <h2 class="section-heading">
+      <span class="section-icon">$</span> All Notes
+      <span class="section-count">{{ $totalNotes }}</span>
+    </h2>
+    <div class="all-notes-controls">
+      <input type="text" id="notes-filter" placeholder="Filter notes..." class="notes-filter-input" />
+      <div class="all-notes-sort">
+        <button class="sort-btn active" data-sort="alpha">A-Z</button>
+        <button class="sort-btn" data-sort="recent">Recent</button>
+        <button class="sort-btn" data-sort="status">Status</button>
+      </div>
+    </div>
+    <ul class="all-notes-list" id="all-notes-list">
+      {{- range $allNotes.ByTitle }}
+      <li class="all-note-item"
+          data-title="{{ .Title | lower }}"
+          data-date="{{ .Lastmod.Format "2006-01-02T15:04:05" }}"
+          data-status="{{ .Params.status | default "seeding" }}">
+        <a href="{{ .RelPermalink }}">
+          <span class="status-dot status-dot-{{ .Params.status | default "seeding" }}"></span>
+          <span class="all-note-title">{{ .Title }}</span>
+        </a>
+        <span class="all-note-meta">{{ .Lastmod.Format "Jan 2006" }}</span>
+      </li>
+      {{- end }}
+    </ul>
+  </section>
+
+  {{- /* ── FOOTER ── */ -}}
+  <div class="garden-footer-link">
+    <span>Notes are living documents. They evolve as I learn.</span>
+  </div>
 
 </div>
+
+{{- /* ── CLIENT-SIDE: Filter + Sort ── */ -}}
+<script>
+(function() {
+  const filter = document.getElementById('notes-filter');
+  const list = document.getElementById('all-notes-list');
+  const items = Array.from(list.querySelectorAll('.all-note-item'));
+  const sortBtns = document.querySelectorAll('.sort-btn');
+
+  filter.addEventListener('input', () => {
+    const q = filter.value.toLowerCase().trim();
+    items.forEach(item => {
+      item.style.display = item.dataset.title.includes(q) ? '' : 'none';
+    });
+  });
+
+  const statusOrder = { evergreen: 0, growing: 1, seeding: 2 };
+
+  sortBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      sortBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode = btn.dataset.sort;
+      const sorted = [...items].sort((a, b) => {
+        if (mode === 'alpha') return a.dataset.title.localeCompare(b.dataset.title);
+        if (mode === 'recent') return b.dataset.date.localeCompare(a.dataset.date);
+        if (mode === 'status') return (statusOrder[a.dataset.status] || 2) - (statusOrder[b.dataset.status] || 2);
+        return 0;
+      });
+      sorted.forEach(item => list.appendChild(item));
+    });
+  });
+})();
+</script>
+
 {{ end }}

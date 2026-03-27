@@ -574,3 +574,1050 @@ p:lang(ml),
         font-family: var(--font-body), var(--font-malayalam);
     }
 }
+
+/* ═══════════════════════════════════════════════
+   GARDEN HOME — Homepage Layout
+   ═══════════════════════════════════════════════ */
+
+.garden-home {
+    max-width: 90ch;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 3rem;
+}
+
+/* ── Hero ── */
+.garden-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2.5rem;
+}
+
+.garden-hero-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.garden-intro {
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.garden-intro h1,
+.garden-intro h2,
+.garden-intro h3 {
+    display: none;
+}
+
+.garden-intro p {
+    margin-bottom: 0.6rem;
+}
+
+.garden-intro blockquote {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    border-left-color: var(--accent);
+    opacity: 0.8;
+}
+
+.garden-stats {
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 3.5rem;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--text-primary);
+}
+
+.stat-evergreen { color: var(--status-evergreen); }
+.stat-growing { color: var(--status-growing); }
+.stat-seeding { color: var(--status-seeding); }
+
+.stat-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-top: 0.3rem;
+}
+
+.garden-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.garden-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.garden-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-code);
+    font-size: 0.78rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    width: 100%;
+    justify-content: center;
+}
+
+.garden-action-btn:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+}
+
+.action-icon {
+    font-size: 0.9rem;
+}
+
+.garden-action-link {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    border-bottom: none;
+    transition: color 0.15s;
+}
+
+.garden-action-link:hover {
+    color: var(--link);
+    border-bottom: none;
+}
+
+@media (max-width: 640px) {
+    .garden-hero {
+        flex-direction: column;
+    }
+    .garden-sidebar {
+        width: 100%;
+    }
+    .garden-stats {
+        width: 100%;
+        justify-content: space-around;
+    }
+    .garden-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    .garden-action-btn {
+        width: auto;
+    }
+}
+
+/* ── Section Headings ── */
+.section-heading {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-icon {
+    color: var(--accent);
+    font-weight: 400;
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.section-count {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-left: auto;
+}
+
+/* ── Dual Column Layout (Recently Tended / Most Connected) ── */
+.garden-dual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.garden-column {
+    min-width: 0;
+}
+
+@media (max-width: 640px) {
+    .garden-dual {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+/* ── Garden Lists (shared between Recently Tended & Most Connected) ── */
+.garden-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.garden-list-item {
+    margin: 0;
+    padding: 0;
+}
+
+.garden-list-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.45rem 0;
+    border-bottom: none;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.garden-list-link:hover {
+    color: var(--link);
+    border-bottom: none;
+}
+
+.garden-list-title {
+    font-size: 0.88rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.garden-list-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+
+/* ── Status Dots ── */
+.status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.status-dot-evergreen { background: var(--status-evergreen); }
+.status-dot-growing { background: var(--status-growing); }
+.status-dot-seeding { background: var(--status-seeding); }
+
+/* ── Garden Section ── */
+.garden-section {
+    margin-bottom: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.garden-section:last-of-type {
+    border-bottom: none;
+}
+
+/* ── Topic Grid ── */
+.topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.75rem;
+}
+
+.topic-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+}
+
+.topic-card[open] {
+    border-color: var(--accent);
+}
+
+.topic-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 0.9rem;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    list-style: none;
+    user-select: none;
+}
+
+.topic-card-header::-webkit-details-marker {
+    display: none;
+}
+
+.topic-card-header::before {
+    content: '>';
+    color: var(--accent);
+    font-family: var(--font-code);
+    margin-right: 0.5rem;
+    transition: transform 0.15s;
+    display: inline-block;
+}
+
+.topic-card[open] > .topic-card-header::before {
+    transform: rotate(90deg);
+}
+
+.topic-card-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--bg-primary);
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-weight: 400;
+}
+
+.topic-card-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0.9rem 0.7rem;
+    border-top: 1px solid var(--border);
+}
+
+.topic-card-list li {
+    margin: 0;
+    padding: 0;
+}
+
+.topic-card-list a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    border-bottom: none;
+    transition: color 0.15s;
+}
+
+.topic-card-list a:hover {
+    color: var(--link);
+    border-bottom: none;
+}
+
+/* ── All Notes Section ── */
+.all-notes-controls {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.notes-filter-input {
+    flex: 1;
+    padding: 0.45rem 0.7rem;
+    font-family: var(--font-code);
+    font-size: 0.8rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.notes-filter-input:focus {
+    border-color: var(--accent);
+}
+
+.notes-filter-input::placeholder {
+    color: var(--text-muted);
+}
+
+.all-notes-sort {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.sort-btn {
+    padding: 0.4rem 0.65rem;
+    font-family: var(--font-code);
+    font-size: 0.72rem;
+    background: var(--bg-secondary);
+    border: none;
+    border-right: 1px solid var(--border);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.sort-btn:last-child {
+    border-right: none;
+}
+
+.sort-btn:hover {
+    color: var(--text-primary);
+}
+
+.sort-btn.active {
+    background: var(--accent);
+    color: var(--bg-primary);
+}
+
+.all-notes-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 2;
+    column-gap: 2rem;
+}
+
+.all-note-item {
+    break-inside: avoid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.3rem 0;
+}
+
+.all-note-item a {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-bottom: none;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    min-width: 0;
+    overflow: hidden;
+    transition: color 0.15s;
+}
+
+.all-note-item a:hover {
+    color: var(--link);
+    border-bottom: none;
+}
+
+.all-note-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.all-note-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+}
+
+@media (max-width: 640px) {
+    .all-notes-list {
+        columns: 1;
+    }
+    .all-notes-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .all-notes-sort {
+        align-self: flex-start;
+    }
+}
+
+/* ── Garden Footer Tagline ── */
+.garden-footer-link {
+    text-align: center;
+    padding: 1rem 0 0;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════
+   TAG PAGES — Tag list & single tag
+   ═══════════════════════════════════════════════ */
+
+.tag-page {
+    max-width: 72ch;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 2rem;
+}
+
+/* ── Tag Header ── */
+.tag-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.tag-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 0.3rem 0;
+}
+
+.tag-hash {
+    color: var(--accent);
+    font-weight: 400;
+    margin-right: 0.15rem;
+}
+
+.tag-count {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* ── Tags Cloud (all tags view) ── */
+.tags-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tags-cloud-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.7rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    border-bottom: none;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.tags-cloud-item:hover {
+    border-color: var(--accent);
+    background: var(--bg-primary);
+    border-bottom: none;
+}
+
+.tags-cloud-name {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.tags-cloud-count {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: var(--bg-primary);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    min-width: 1.4rem;
+    text-align: center;
+}
+
+/* ── Tag Notes List (single tag view) ── */
+.tag-notes-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.tag-notes-sort {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.tag-notes-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tag-note-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    margin: 0;
+}
+
+.tag-note-item:last-child {
+    border-bottom: none;
+}
+
+.tag-note-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    border-bottom: none;
+    transition: color 0.15s;
+}
+
+.tag-note-link:hover {
+    border-bottom: none;
+}
+
+.tag-note-link:hover .tag-note-title {
+    color: var(--link);
+}
+
+.tag-note-main {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.tag-note-title {
+    font-size: 0.92rem;
+    color: var(--text-primary);
+    transition: color 0.15s;
+}
+
+.tag-note-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.tag-note-status {
+    text-transform: lowercase;
+}
+
+.tag-note-date {
+    white-space: nowrap;
+}
+
+.tag-note-summary {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin: 0.3rem 0 0 calc(6px + 0.5rem);
+    line-height: 1.5;
+}
+
+/* ── Related Tags ── */
+.tag-related {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.tag-related-heading {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 0 0 0.75rem 0;
+}
+
+.tag-related-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.tag-related-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.55rem;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    border-bottom: none;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.tag-related-item:hover {
+    border-color: var(--accent);
+    color: var(--link);
+    border-bottom: none;
+}
+
+.tag-related-count {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+    .tag-page {
+        padding: 1rem 0.75rem 2rem;
+    }
+    .tag-title {
+        font-size: 1.5rem;
+    }
+    .tag-note-link {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+}
+
+/* ═══════════════════════════════════════════════
+   NOTE PAGE — Single note layout
+   ═══════════════════════════════════════════════ */
+
+.note {
+    max-width: 72ch;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 2rem;
+}
+
+/* ── Note Header ── */
+.note-header {
+    margin-bottom: 2rem;
+}
+
+.note-back {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-bottom: none;
+    margin-bottom: 1.25rem;
+    transition: color 0.15s;
+}
+
+.note-back:hover {
+    color: var(--link);
+    border-bottom: none;
+}
+
+.note-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0 0 0.6rem 0;
+}
+
+.note-summary {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+    font-style: italic;
+}
+
+.note-meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.note-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.55rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+}
+
+.note-status-evergreen { border-color: var(--status-evergreen); color: var(--status-evergreen); }
+.note-status-growing { border-color: var(--status-growing); color: var(--status-growing); }
+.note-status-seeding { border-color: var(--status-seeding); color: var(--status-seeding); }
+
+.note-type-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.55rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: var(--accent);
+    color: var(--bg-primary);
+}
+
+.note-dates {
+    color: var(--text-muted);
+}
+
+.note-reading-time {
+    color: var(--text-muted);
+}
+
+.note-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.note-tag {
+    display: inline-block;
+    padding: 0.15rem 0.45rem;
+    font-size: 0.72rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-muted);
+    border-bottom: none;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.note-tag:hover {
+    color: var(--link);
+    border-color: var(--link);
+    border-bottom: none;
+}
+
+/* ── Note Content ── */
+.note-content {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    line-height: 1.7;
+}
+
+.note-content h2 {
+    margin-top: 2rem;
+}
+
+.note-content h3 {
+    margin-top: 1.5rem;
+}
+
+/* ── Backlinks ── */
+.note-backlinks {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.note-backlinks-heading {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.note-backlinks-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.note-backlinks-list li {
+    margin: 0;
+    padding: 0;
+}
+
+.backlink-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.5rem 0.65rem;
+    margin: 0 -0.65rem;
+    border-radius: 4px;
+    border-bottom: none;
+    transition: background 0.15s;
+}
+
+.backlink-item:hover {
+    background: var(--bg-secondary);
+    border-bottom: none;
+}
+
+.backlink-title {
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.backlink-summary {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding-left: calc(6px + 0.4rem);
+}
+
+/* ── Note Footer ── */
+.note-footer {
+    margin-top: 3rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+}
+
+.note-footer-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.note-footer-link {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-bottom: none;
+    font-family: var(--font-body);
+    transition: color 0.15s;
+}
+
+.note-footer-link:hover {
+    color: var(--link);
+    border-bottom: none;
+}
+
+@media (max-width: 640px) {
+    .note {
+        padding: 1rem 0.75rem 2rem;
+    }
+    .note-title {
+        font-size: 1.5rem;
+    }
+    .note-meta-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+    }
+}
+
+/* ── Site Footer ── */
+.site-footer {
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+}
+
+.footer-container {
+    max-width: 90ch;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 2rem;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+}
+
+.footer-logo {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    border-bottom: none;
+}
+
+.footer-logo:hover {
+    color: var(--link);
+    border-bottom: none;
+}
+
+.footer-copyright {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.footer-social {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.footer-social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.footer-social-link:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+}
+
+.footer-bottom {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.footer-nav {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.75rem;
+}
+
+.footer-nav a {
+    color: var(--text-muted);
+    border-bottom: none;
+    transition: color 0.15s;
+}
+
+.footer-nav a:hover {
+    color: var(--link);
+    border-bottom: none;
+}
+
+.footer-sep {
+    color: var(--border);
+    font-size: 0.7rem;
+}
+
+@media (max-width: 640px) {
+    .footer-top {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    .footer-nav {
+        flex-wrap: wrap;
+    }
+}
