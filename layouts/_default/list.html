@@ -1,24 +1,120 @@
 {{ define "main" }}
+<div class="tag-page">
 
-<div class="container">
-    <div class="py-5 rounded-3">
-        <div class="container-fluid py-2">
-            <h1 class="display-2 mb-4">{{ .Title }}</h1>
-            <p class="bio col-md-8 fs-4 serif">{{ .Summary }}</p>
+    <header class="tag-header">
+        <a href="{{ "/notes/" | relURL }}" class="note-back">&larr; Notes</a>
+        <h1 class="tag-title">
+            {{ if eq .Kind "term" }}
+            <span class="tag-hash">#</span>{{ .Title }}
+            {{ else if eq .Kind "taxonomy" }}
+            Tags
+            {{ else }}
+            {{ .Title }}
+            {{ end }}
+        </h1>
+        {{ if eq .Kind "term" }}
+        <p class="tag-count">{{ len .Pages }} note{{ if gt (len .Pages) 1 }}s{{ end }}</p>
+        {{ else if eq .Kind "taxonomy" }}
+        <p class="tag-count">{{ len .Pages }} tags across the garden</p>
+        {{ end }}
+    </header>
+
+    {{ if eq .Kind "taxonomy" }}
+    {{- /* ── All Tags View ── */ -}}
+    <div class="tags-cloud">
+        {{ range .Pages.ByTitle }}
+        <a href="{{ .RelPermalink }}" class="tags-cloud-item">
+            <span class="tags-cloud-name">#{{ .Title }}</span>
+            <span class="tags-cloud-count">{{ len .Pages }}</span>
+        </a>
+        {{ end }}
+    </div>
+
+    {{ else }}
+    {{- /* ── Single Tag: Note List ── */ -}}
+    <div class="tag-notes-controls">
+        <div class="tag-notes-sort">
+            <button class="sort-btn active" data-sort="recent">Recent</button>
+            <button class="sort-btn" data-sort="alpha">A-Z</button>
+            <button class="sort-btn" data-sort="status">Status</button>
         </div>
     </div>
-</div>
 
-<div class="container">
-    {{ range .Pages.ByPublishDate.Reverse }}
-    <p>
-        <h3><a class="title" href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-        {{ partial "metadata.html" . }}
-        <a class="summary" href="{{ .RelPermalink }}">
-            <p>{{ .Summary }}</p>
-        </a>
-    </p>
+    <ul class="tag-notes-list" id="tag-notes-list">
+        {{ range .Pages.ByLastmod.Reverse }}
+        <li class="tag-note-item"
+            data-title="{{ .Title | lower }}"
+            data-date="{{ .Lastmod.Format "2006-01-02T15:04:05" }}"
+            data-status="{{ .Params.status | default "seeding" }}">
+            <a href="{{ .RelPermalink }}" class="tag-note-link">
+                <div class="tag-note-main">
+                    <span class="status-dot status-dot-{{ .Params.status | default "seeding" }}"></span>
+                    <span class="tag-note-title">{{ .Title }}</span>
+                </div>
+                <div class="tag-note-meta">
+                    <span class="tag-note-status">
+                        {{ if eq .Params.status "evergreen" }}evergreen
+                        {{ else if eq .Params.status "growing" }}growing
+                        {{ else }}seedling{{ end }}
+                    </span>
+                    <span class="tag-note-date">{{ .Lastmod.Format "Jan 2006" }}</span>
+                </div>
+            </a>
+            {{ with .Params.summary }}
+            <p class="tag-note-summary">{{ . | truncate 120 }}</p>
+            {{ end }}
+        </li>
+        {{ end }}
+    </ul>
+
+    {{- /* ── Related Tags ── */ -}}
+    {{ $currentTag := .Title }}
+    {{ $relatedTags := dict }}
+    {{ range .Pages }}
+        {{ range .Params.tags }}
+            {{ if ne . $currentTag }}
+                {{ $prev := index $relatedTags . | default 0 }}
+                {{ $relatedTags = merge $relatedTags (dict . (add $prev 1)) }}
+            {{ end }}
+        {{ end }}
     {{ end }}
-</div>
 
+    {{ if gt (len $relatedTags) 0 }}
+    <section class="tag-related">
+        <h2 class="tag-related-heading">Related tags</h2>
+        <div class="tag-related-list">
+            {{ range $tag, $count := $relatedTags }}
+            <a href="{{ printf "/notes/tags/%s/" (urlize $tag) | relURL }}" class="tag-related-item">
+                #{{ $tag }} <span class="tag-related-count">{{ $count }}</span>
+            </a>
+            {{ end }}
+        </div>
+    </section>
+    {{ end }}
+
+    <script>
+    (function() {
+        const list = document.getElementById('tag-notes-list');
+        const items = Array.from(list.querySelectorAll('.tag-note-item'));
+        const sortBtns = document.querySelectorAll('.sort-btn');
+        const statusOrder = { evergreen: 0, growing: 1, seeding: 2 };
+        sortBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                sortBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const mode = btn.dataset.sort;
+                const sorted = [...items].sort((a, b) => {
+                    if (mode === 'alpha') return a.dataset.title.localeCompare(b.dataset.title);
+                    if (mode === 'recent') return b.dataset.date.localeCompare(a.dataset.date);
+                    if (mode === 'status') return (statusOrder[a.dataset.status] || 2) - (statusOrder[b.dataset.status] || 2);
+                    return 0;
+                });
+                sorted.forEach(item => list.appendChild(item));
+            });
+        });
+    })();
+    </script>
+    {{ end }}
+
+</div>
 {{ end }}
