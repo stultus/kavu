@@ -1,68 +1,95 @@
-[![GitHub issues](https://img.shields.io/github/issues/paulmartins/hugo-digital-garden-theme?style=flat-square&logo=appveyor)](https://github.com/paulmartins/hugo-digital-garden-theme/issues)
-[![GitHub forks](https://img.shields.io/github/forks/paulmartins/hugo-digital-garden-theme?style=flat-square&logo=appveyor)](https://github.com/paulmartins/hugo-digital-garden-theme/network)
-[![GitHub stars](https://img.shields.io/github/stars/paulmartins/hugo-digital-garden-theme?style=flat-square&logo=appveyor)](https://github.com/paulmartins/hugo-digital-garden-theme/stargazers)
-[![license](https://img.shields.io/github/license/paulmartins/hugo-digital-garden-theme?style=flat-square&logo=appveyor)](https://github.com/paulmartins/hugo-digital-garden-theme/blob/main/LICENSE)
+# Hugo Digital Garden Theme
 
+A monospace, terminal-inspired Hugo theme for digital gardens and personal knowledge bases. Designed around the principles of interconnected note-taking, with support for note maturity stages, network graph visualization, and dense cross-linking.
 
-# Digital Garden Theme for Hugo
+**Live site**: [stultus.in/notes](https://stultus.in/notes/)
 
-A simple Hugo theme for your digital garden, inspired by Maggie Appleton [website](https://maggieappleton.com/)
+## Features
 
-[**DEMO**](https://hugo-digital-garden-demo.netlify.app/)
+**Homepage**
+- Live garden statistics (total notes, evergreen/growing/seedling counts)
+- Recently Tended and Most Connected entry points
+- Collapsible topic cards for browsing by theme
+- Filterable and sortable full note index
+- Random note discovery button
+- Interactive network graph with search, hover highlighting, and fullscreen mode
 
-This theme includes:
-* a digital garden / blog
-* a projects portfolio
-* library notes
+**Note Pages**
+- Inline metadata bar: maturity status, dates, reading time
+- Summary subtitle and tag pills
+- Automatic backlinks with summaries
+- Random note navigation
 
-![Home](https://github.com/paulmartins/hugo-digital-garden-theme/blob/main/images/screenshot.png)
+**Tag System**
+- Tag cloud with note counts
+- Sortable tag pages (Recent / A-Z / Status)
+- Related tags discovery based on co-occurrence
 
+**Network Graph**
+- Force-directed graph of all notes and their connections
+- Hover to highlight a node and its neighbors with labels
+- Label collision avoidance
+- Search, zoom, fit-to-view, and fullscreen controls
+- Keyboard shortcuts: `/` search, `F` fit, `Shift+F` fullscreen, `+`/`-` zoom
 
-## Getting started
+**Design**
+- Monospace typography (JetBrains Mono, IBM Plex Mono, Fira Code)
+- Nord-inspired color palette with CSS variables
+- Full dark mode support
+- Responsive layout
+- Wikilink-style `[[bracket]]` rendering for internal links
+- Malayalam font support (Manjari)
 
-1. Install hugo and create a new website: [https://gohugo.io/getting-started/quick-start/](https://gohugo.io/getting-started/quick-start/)
-2. Add the theme to your website  
-You can either use git submodule or clone the repo in your theme folder
+## Note Maturity
 
-    ```bash
-    git submodule add https://github.com/paulmartins/hugo-digital-garden-theme.git themes/hugo-digital-garden-theme
-    ```
+Notes use a `status` frontmatter field to indicate maturity:
 
-    ```bash
-    cd themes
-    git clone https://github.com/paulmartins/hugo-digital-garden-theme.git
-    ```
+| Status | Meaning |
+|--------|---------|
+| `seeding` | Stub or rough idea |
+| `growing` | Developed draft, partially linked |
+| `evergreen` | Polished, well-linked, stable understanding |
 
-3. Customize your site in your `config.toml`. An example is given in the theme folder: `themes/digital-garden/exampleSite/config.toml`
-
-4. Run the server and check your [localhost:1313](http://localhost:1313)
-    ```bash
-    hugo server
-    ```
-
-### Extra tips
-
-You will write the content for your website in a `content` folder, for example in `content/garden/evergreen_example.md`. If you want to have your `content` folder in your root directory, you can copy that from the exampleSite folder to your root directory. In the root directory's `config.toml` you will need to  change the themesdir to have `themesdir = "./themes"`. You now run `hugo server` in the root directory of your project, and Hugo will start your website locally on an available port.
-
-If you want to compare the website from this to the example site, you can start `hugo server` in the exampleSite directory too. Hugo will use different ports for each server, so you can compare the rendered pages with each other. 
-
-To create custom styling, you can create `./static/css/my_style.css`. The CSS styling in here will override the theme's default styling. [Here](https://github.com/IdiosApps/IdiosApps.github.io/blob/main/static/css/my_style.css) is an example custom CSS file from a user's blog, and [here](https://idiosapps.github.io/garden/games-for-socials/) is one of their published pages looks. You can see the custom table formatting: custom header row colour, alternating row backgrounds, custom fonts, etc.
-
-
-## Update to the latest version of the theme
-
-If you used git submodule to add the theme (see Getting started) do
-
-```bash
-git submodule update --remote --rebase
-```
-
-If you clone the theme, just go in the theme folder and `pull`
+## Getting Started
 
 ```bash
-cd themes/hugo-digital-garden-theme
-git pull
+# Add as a submodule
+git submodule add git@github.com:stultus/hugo-digital-garden-theme.git themes/hugo-digital-garden-theme
 ```
 
+Set in `hugo.toml`:
+```toml
+theme = "hugo-digital-garden-theme"
+themesdir = "./themes"
+```
 
-[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fpaulmartins%2Fhugo-digital-garden-theme)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fpaulmartins%2Fhugo-digital-garden-theme)
+### Frontmatter
+
+```yaml
+---
+title: "Your Note Title"
+date: 2025-01-01
+lastmod: 2025-01-15
+draft: false
+tags: ["topic-a", "topic-b"]
+summary: "One-line description of the note."
+status: "seeding"  # seeding | growing | evergreen
+type: "note"       # note | essay | moc | source
+---
+```
+
+### Internal Links
+
+Use absolute paths for internal links to ensure the theme's link resolver works correctly:
+
+```markdown
+[Note Title](/notes/note-slug/)
+```
+
+## Origin
+
+This theme was originally forked from [paulmartins/hugo-digital-garden-theme](https://github.com/paulmartins/hugo-digital-garden-theme), which was inspired by [Maggie Appleton's website](https://maggieappleton.com/). It has since been substantially rewritten with a new design system, homepage, note pages, tag system, network graph, and CSS architecture.
+
+## License
+
+MIT
