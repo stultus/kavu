@@ -1,11 +1,9 @@
 <nav style="padding: 1rem 0; margin-bottom: 2rem;">
-    <div class="container" style="max-width: 65ch; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;">
-        <a href="{{ .Site.BaseURL }}" style="font-weight: 600; font-size: 1.1rem; border-bottom: none; color: var(--text-primary);">
-            {{ if .Site.Params.Initials }}
-            {{ .Site.Params.Initials }}
-            {{ else }}
-            {{ .Site.Params.Name }}
-            {{ end }}
+    <div class="container" style="max-width: 90ch; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;">
+        <a href="{{ .Site.BaseURL }}" style="display: flex; align-items: center; gap: 0.5rem; border-bottom: none; text-decoration: none;">
+            <img src="{{ "img/logo-light.png" | relURL }}" alt="{{ .Site.Title }}" class="nav-logo nav-logo-light" style="height: 32px; width: auto; margin: 0;">
+            <img src="{{ "img/logo-dark.png" | relURL }}" alt="{{ .Site.Title }}" class="nav-logo nav-logo-dark" style="height: 32px; width: auto; margin: 0; display: none;">
+            <span style="font-family: var(--font-heading); font-weight: 600; font-size: 1.05rem; color: var(--text-primary);">stultus notes</span>
         </a>
         <ul style="display: flex; gap: 1.5rem; list-style: none; margin: 0; align-items: center;">
             {{ range .Site.Menus.main }}
@@ -15,5 +13,9 @@
             {{ end }}
         </ul>
     </div>
-    <hr style="border: none; border-top: 1px solid var(--border); margin: 1rem auto 0; max-width: 65ch;">
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 1rem auto 0; max-width: 90ch;">
 </nav>
+<style>
+    body.dark-theme .nav-logo-light { display: none !important; }
+    body.dark-theme .nav-logo-dark { display: block !important; }
+</style>
