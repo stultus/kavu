@@ -1,73 +1,97 @@
 {{ define "main" }}
-<div class="container">
-    
-    <!-- Back Link -->
-    <a href="{{ "/notes/" | relURL }}" class="back-link">← Notes</a>
-    
-    <!-- Title -->
-    <h1>{{ .Title }}</h1>
-    
-    <!-- Metadata -->
-    <div class="note-meta">
-        {{ if eq .Params.type "source" }}
-        <span class="badge badge-source">📚 Source</span>
+<article class="note">
+
+    {{- /* ── Header ── */ -}}
+    <header class="note-header">
+        <a href="{{ "/notes/" | relURL }}" class="note-back">&larr; Notes</a>
+        <h1 class="note-title">{{ .Title }}</h1>
+
+        {{ with .Params.summary }}
+        <p class="note-summary">{{ . }}</p>
         {{ end }}
-        <div class="meta-item">
-            <span class="badge badge-{{ .Params.status | default "seeding" }}">
+
+        <div class="note-meta-bar">
+            <span class="note-status note-status-{{ .Params.status | default "seeding" }}">
                 {{ if eq .Params.status "evergreen" }}🌳 Evergreen
                 {{ else if eq .Params.status "growing" }}🌿 Growing
                 {{ else }}🌱 Seedling{{ end }}
             </span>
+            {{ if eq .Params.type "source" }}
+            <span class="note-type-badge">📚 Source</span>
+            {{ end }}
+            <span class="note-dates">
+                {{ .Date.Format "Jan 2, 2006" }}
+                {{ if ne (.Date.Format "2006-01-02") (.Lastmod.Format "2006-01-02") }}
+                · Updated {{ .Lastmod.Format "Jan 2, 2006" }}
+                {{ end }}
+            </span>
+            {{ $wordCount := .WordCount }}
+            {{ if gt $wordCount 50 }}
+            <span class="note-reading-time">· {{ math.Round (div (float $wordCount) 200.0) | int }} min read</span>
+            {{ end }}
         </div>
-        <div class="meta-item">
-            <span class="date">Created: {{ .Date.Format "Jan 2, 2006" }}</span>
+
+        {{ with .Params.tags }}
+        <div class="note-tags">
+            {{ range . }}
+            <a href="{{ printf "/notes/tags/%s/" (urlize .) | relURL }}" class="note-tag">{{ . }}</a>
+            {{ end }}
         </div>
-        <div class="meta-item">
-            <span class="date">Updated: {{ .Lastmod.Format "Jan 2, 2006" }}</span>
-        </div>
-    </div>
-    
-    <!-- Tags -->
-    {{ with .Params.tags }}
-    <div class="tags">
-        {{ range . }}
-        <a href="{{ printf "/notes/tags/%s/" (urlize .) | relURL }}" class="tag">{{ . }}</a>
         {{ end }}
-    </div>
-    {{ end }}
-    
-    <!-- Separator -->
-    <hr class="content-separator">
-    
-    <!-- Content -->
-    <div class="content">
+    </header>
+
+    {{- /* ── Content ── */ -}}
+    <div class="note-content">
         {{ .Content }}
     </div>
-    
-    <!-- Backlinks -->
+
+    {{- /* ── Backlinks ── */ -}}
     {{ $currentPage := . }}
     {{ $backlinks := slice }}
-    
     {{ range .Site.RegularPages }}
         {{ $content := .RawContent }}
         {{ if and (ne .Permalink $currentPage.Permalink) (in $content $currentPage.Title) }}
             {{ $backlinks = $backlinks | append . }}
         {{ end }}
     {{ end }}
-    
+
     {{ if gt (len $backlinks) 0 }}
-        <div class="backlinks">
-            <h3>Linked References</h3>
-            <ul>
-                {{ range $backlinks }}
-                    <li>
-                        <span class="wikilink-bracket">[[</span><a href="{{ .RelPermalink }}">{{ .Title }}</a><span class="wikilink-bracket">]]</span>
-                        {{ if .Summary }}<p class="summary">{{ .Summary | truncate 100 }}</p>{{ end }}
-                    </li>
-                {{ end }}
-            </ul>
-        </div>
+    <section class="note-backlinks">
+        <h2 class="note-backlinks-heading">
+            <span class="section-icon">&larr;</span> {{ len $backlinks }} note{{ if gt (len $backlinks) 1 }}s{{ end }} link here
+        </h2>
+        <ul class="note-backlinks-list">
+            {{ range $backlinks }}
+            <li>
+                <a href="{{ .RelPermalink }}" class="backlink-item">
+                    <span class="backlink-title">
+                        <span class="status-dot status-dot-{{ .Params.status | default "seeding" }}"></span>
+                        {{ .Title }}
+                    </span>
+                    <span class="backlink-summary">{{ with .Params.summary }}{{ . | truncate 80 }}{{ end }}</span>
+                </a>
+            </li>
+            {{ end }}
+        </ul>
+    </section>
     {{ end }}
-    
-</div>
+
+    {{- /* ── Note Footer ── */ -}}
+    <footer class="note-footer">
+        <div class="note-footer-nav">
+            <a href="{{ "/notes/" | relURL }}" class="note-footer-link">&larr; All notes</a>
+            <button class="note-footer-link" id="note-random" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;padding:0;">Random note &rarr;</button>
+        </div>
+    </footer>
+
+</article>
+
+<script>
+document.getElementById('note-random').addEventListener('click', function() {
+    var urls = [{{ range (where site.RegularPages "Params.type" "!=" "source") }}"{{ .RelPermalink }}",{{ end }}];
+    var current = window.location.pathname;
+    var filtered = urls.filter(function(u) { return u !== current; });
+    window.location.href = filtered[Math.floor(Math.random() * filtered.length)];
+});
+</script>
 {{ end }}
