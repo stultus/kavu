@@ -1,20 +1,17 @@
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="{{ .Title }}"/>
-<meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.description }}{{ end }}{{ end }}"/>
-{{ with .Params.images }}
-  {{ range first 1 . }}
-  <meta name="twitter:image" content="{{ . | absURL }}"/>
-  {{ end }}
-{{ else }}
-  {{ with .Site.Params.images }}
-    {{ range first 1 . }}
-    <meta name="twitter:image" content="{{ . | absURL }}"/>
-    {{ end }}
-  {{ end }}
-{{ end }}
-{{ range .Site.Params.social }}
-  {{ if eq .name "Twitter" }}
-    <meta name="twitter:site" content="@{{ .link | replace "https://twitter.com/" "" | replace "https://x.com/" "" | replace "/" "" }}"/>
-  {{ end }}
-{{ end }}
+{{ $desc := .Site.Params.description }}
+{{ with .Description }}{{ $desc = . }}{{ end }}
+{{ if and .IsPage (not .Description) }}{{ with .Params.summary }}{{ $desc = . }}{{ else }}{{ with .Summary }}{{ $desc = . | plainify | truncate 160 }}{{ end }}{{ end }}{{ end }}
 
+{{ $title := .Title }}
+{{ if .IsHome }}{{ $title = print .Site.Title " — Digital Garden by Hrishikesh Bhaskaran" }}{{ end }}
+
+{{ $img := "https://stultus.in/img/hrishikesh_bhaskaran-bnw.png" }}
+{{ with .Params.images }}{{ range first 1 . }}{{ $img = . | absURL }}{{ end }}{{ end }}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@_stultus" />
+<meta name="twitter:creator" content="@_stultus" />
+<meta name="twitter:title" content="{{ $title }}" />
+<meta name="twitter:description" content="{{ $desc }}" />
+<meta name="twitter:image" content="{{ $img }}" />
+<meta name="twitter:image:alt" content="Hrishikesh Bhaskaran" />

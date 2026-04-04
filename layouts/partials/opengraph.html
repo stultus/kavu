@@ -1,16 +1,24 @@
-<meta property="og:title" content="{{ .Title }}" />
-<meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.description }}{{ end }}{{ end }}" />
+{{ $desc := .Site.Params.description }}
+{{ with .Description }}{{ $desc = . }}{{ end }}
+{{ if and .IsPage (not .Description) }}{{ with .Params.summary }}{{ $desc = . }}{{ else }}{{ with .Summary }}{{ $desc = . | plainify | truncate 160 }}{{ end }}{{ end }}{{ end }}
+
+{{ $title := .Title }}
+{{ if .IsHome }}{{ $title = print .Site.Title " — Digital Garden by Hrishikesh Bhaskaran" }}{{ end }}
+
+{{ $img := "https://stultus.in/img/hrishikesh_bhaskaran-bnw.png" }}
+{{ with .Params.images }}{{ range first 1 . }}{{ $img = . | absURL }}{{ end }}{{ end }}
+
+<meta property="og:site_name" content="stultus notes" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="{{ $title }}" />
+<meta property="og:description" content="{{ $desc }}" />
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
 <meta property="og:url" content="{{ .Permalink }}" />
-{{ with .Params.images }}
-  {{ range first 1 . }}
-    <meta property="og:image" content="{{ . | absURL }}" />
-  {{ end }}
-{{ else }}
-  {{ with .Site.Params.images }}
-    {{ range first 1 . }}
-      <meta property="og:image" content="{{ . | absURL }}" />
-    {{ end }}
-  {{ end }}
+<meta property="og:image" content="{{ $img }}" />
+<meta property="og:image:alt" content="Hrishikesh Bhaskaran" />
+{{ if .IsPage }}
+  {{ with .Date }}<meta property="article:published_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}" />{{ end }}
+  {{ with .Lastmod }}<meta property="article:modified_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}" />{{ end }}
+  <meta property="article:author" content="Hrishikesh Bhaskaran" />
+  {{ range .Params.tags }}<meta property="article:tag" content="{{ . }}" />{{ end }}
 {{ end }}
-

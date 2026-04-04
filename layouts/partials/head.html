@@ -2,6 +2,32 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    {{/* ── Title ── */}}
+    {{ $title := print .Site.Title " | " .Title }}
+    {{ if .IsHome }}{{ $title = print .Site.Title " — Digital Garden by Hrishikesh Bhaskaran" }}{{ end }}
+    <title>{{ $title }}</title>
+
+    {{/* ── Determine description ── */}}
+    {{ $desc := .Site.Params.description }}
+    {{ with .Description }}{{ $desc = . }}{{ end }}
+    {{ if and .IsPage (not .Description) }}{{ with .Params.summary }}{{ $desc = . }}{{ else }}{{ with .Summary }}{{ $desc = . | plainify | truncate 160 }}{{ end }}{{ end }}{{ end }}
+    {{ if .IsHome }}{{ $desc = "The digital garden of Hrishikesh Bhaskaran (stultus) — a growing collection of notes, ideas, and explorations on software engineering, FOSS, language computing, and more." }}{{ end }}
+    <meta name="description" content="{{ $desc }}">
+
+    {{/* ── Canonical URL ── */}}
+    <link rel="canonical" href="{{ .Permalink }}">
+
+    {{/* ── Robots ── */}}
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    {{/* ── Author & Keywords ── */}}
+    <meta name="author" content="Hrishikesh Bhaskaran">
+    {{ with .Params.tags }}
+    <meta name="keywords" content="{{ delimit . ", " }}, Hrishikesh Bhaskaran, stultus, digital garden, notes">
+    {{ else }}
+    <meta name="keywords" content="Hrishikesh Bhaskaran, stultus, Hrishi, digital garden, notes, software engineering">
+    {{ end }}
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ "favicon.ico" | relURL }}">
     <link rel="icon" type="image/png" href="{{ "favicon.png" | relURL }}">
@@ -10,6 +36,11 @@
     <!-- SEO & Social Metadata -->
     {{ partial "opengraph.html" . }}
     {{ partial "twitter_cards.html" . }}
+
+    {{/* ── RSS ── */}}
+    {{ with .OutputFormats.Get "RSS" }}
+    <link rel="alternate" type="application/rss+xml" href="{{ .Permalink }}" title="{{ $.Site.Title }}">
+    {{ end }}
 
     <!-- Enable Google Analytics -->
     {{ if .Site.Params.googleAnalytics }}
@@ -25,10 +56,75 @@
     <!-- Local Styles -->
     <link rel="stylesheet" type="text/css" href="{{ "css/style.css" | relURL }}">
 
-    <!-- Site Title -->
-    {{ $title := print .Site.Title " | " .Title }}
-    {{ if .IsHome }}{{ $title = .Site.Title }}{{ end }}
-    <title>{{ $title }}</title>
-    <meta name="description" content="{{ if .IsPage }}{{ .Summary }}{{ else }}{{ if .IsHome }}{{ .Site.Params.description }}{{ else }}{{ end }}{{ end }}">
+    {{/* ── JSON-LD Structured Data ── */}}
+    {{ if .IsHome }}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "{{ .Site.BaseURL }}",
+      "name": "{{ .Site.Title }}",
+      "description": {{ $desc | jsonify }},
+      "author": {
+        "@type": "Person",
+        "name": "Hrishikesh Bhaskaran",
+        "alternateName": ["stultus", "Hrishi", "Hrishikesh"],
+        "url": "https://stultus.in/about/"
+      }
+    }
+    </script>
+    {{ end }}
+
+    {{ if and .IsPage (eq .File.LogicalName "stultus.md") }}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Hrishikesh Bhaskaran",
+      "alternateName": ["stultus", "stultusz", "stultuzz", "_stultus", "Hrishi", "Hrishikesh"],
+      "givenName": "Hrishikesh",
+      "familyName": "Bhaskaran",
+      "url": "{{ .Permalink }}",
+      "mainEntityOfPage": "{{ .Permalink }}",
+      "description": "stultus is the online pseudonym of Hrishikesh Bhaskaran, a software engineer and FOSS contributor from Kerala, India. The Latin word means stupid or foolish.",
+      "sameAs": [
+        "https://stultus.in/",
+        "https://stultus.in/about/",
+        "https://github.com/stultus",
+        "https://x.com/_stultus",
+        "https://www.linkedin.com/in/stultus/",
+        "https://instagram.com/stultusz",
+        "https://www.facebook.com/stultus.hrishi"
+      ]
+    }
+    </script>
+    {{ else if .IsPage }}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ .Permalink }}"
+      },
+      "headline": {{ .Title | jsonify }},
+      "description": {{ $desc | jsonify }},
+      {{ with .Date }}"datePublished": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",{{ end }}
+      {{ with .Lastmod }}"dateModified": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",{{ end }}
+      "author": {
+        "@type": "Person",
+        "name": "Hrishikesh Bhaskaran",
+        "alternateName": ["stultus", "Hrishi"],
+        "url": "https://stultus.in/about/"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Hrishikesh Bhaskaran",
+        "url": "https://stultus.in/"
+      }
+      {{ with .Params.tags }},"keywords": {{ . | jsonify }}{{ end }}
+    }
+    </script>
+    {{ end }}
 
 </head>
