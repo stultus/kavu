@@ -161,7 +161,7 @@
     <span><span class="dot" style="background:#3b82f6"></span> Growing</span>
     <span><span class="dot" style="background:#f59e0b"></span> Seedling</span>
   </div>
-  <div id="graph-hint">Scroll to zoom · Drag to pan · Click to visit</div>
+  <div id="graph-hint"></div>
   <div id="graph-tooltip">
     <div class="tooltip-title"></div>
     <div class="tooltip-meta"></div>
@@ -234,6 +234,10 @@
       const tooltipTitle = tooltip.querySelector('.tooltip-title');
       const tooltipMeta = tooltip.querySelector('.tooltip-meta');
       const containerWidth = wrapper.offsetWidth;
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      document.getElementById('graph-hint').textContent = isTouch
+        ? 'Pinch to zoom · Drag to pan · Tap to visit'
+        : 'Scroll to zoom · Drag to pan · Click to visit';
 
       const statusColor = (status) => {
         if (status === 'evergreen') return '#10b981';
@@ -360,7 +364,8 @@
           pendingLabels = [];
         })
         .nodePointerAreaPaint((node, color, ctx) => {
-          const size = Math.max(8, 3 + Math.sqrt(node.connections) * 2.5) + 4;
+          const base = Math.max(8, 3 + Math.sqrt(node.connections) * 2.5);
+          const size = isTouch ? base + 16 : base + 4;
           ctx.fillStyle = color;
           ctx.beginPath();
           ctx.arc(node.x, node.y, size, 0, 2 * Math.PI);
@@ -425,7 +430,7 @@
         })
         .cooldownTicks(300)
         .autoPauseRedraw(false)
-        .enableNodeDrag(true)
+        .enableNodeDrag(!isTouch)
         .enableZoomInteraction(true)
         .enablePanInteraction(true);
 
@@ -435,17 +440,20 @@
       Graph.d3Force('center').strength(0.05);
       Graph.d3Force('collide', d3.forceCollide().radius(n => Math.max(8, 3 + Math.sqrt(n.connections) * 2.5) + 35).strength(0.8));
 
-      // Track mouse for tooltip positioning
-      wrapper.addEventListener('mousemove', e => {
+      // Track pointer for tooltip positioning
+      function positionTooltip(clientX, clientY) {
         const rect = wrapper.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        // Flip tooltip when near edges
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
         const tipWidth = 260;
         const tipHeight = 50;
         tooltip.style.left = (x + tipWidth > rect.width) ? (x - tipWidth - 10) + 'px' : (x + 15) + 'px';
         tooltip.style.top = (y + tipHeight > rect.height) ? (y - tipHeight - 10) + 'px' : (y + 15) + 'px';
-      });
+      }
+      wrapper.addEventListener('mousemove', e => positionTooltip(e.clientX, e.clientY));
+      wrapper.addEventListener('touchstart', e => {
+        if (e.touches.length === 1) positionTooltip(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
 
       // Auto-fit after layout settles
       setTimeout(() => Graph.zoomToFit(400, 60), 1200);
