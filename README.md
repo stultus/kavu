@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/kavu-cover.png" alt="Kavu — A digital garden for Hugo" width="320" />
+  <img src="https://raw.githubusercontent.com/stultus/kavu/main/images/kavu-cover.png" alt="Kavu — A digital garden for Hugo" width="320" />
 </p>
 
 # Kavu
@@ -16,19 +16,19 @@ Homepage — dark and light:
 
 | Dark | Light |
 | :---: | :---: |
-| ![Homepage, dark](images/screenshot-home-dark.png) | ![Homepage, light](images/screenshot-home-light.png) |
+| ![Homepage, dark](https://raw.githubusercontent.com/stultus/kavu/main/images/screenshot-home-dark.png) | ![Homepage, light](https://raw.githubusercontent.com/stultus/kavu/main/images/screenshot-home-light.png) |
 
 Network graph — force-directed view of all notes coloured by maturity:
 
 | Dark | Light |
 | :---: | :---: |
-| ![Network graph, dark](images/screenshot-graph-dark.png) | ![Network graph, light](images/screenshot-graph-light.png) |
+| ![Network graph, dark](https://raw.githubusercontent.com/stultus/kavu/main/images/screenshot-graph-dark.png) | ![Network graph, light](https://raw.githubusercontent.com/stultus/kavu/main/images/screenshot-graph-light.png) |
 
 Browse-by-topic and the full note index:
 
 | Dark | Light |
 | :---: | :---: |
-| ![Topics and index, dark](images/screenshot-topics-dark.png) | ![Topics and index, light](images/screenshot-topics-light.png) |
+| ![Topics and index, dark](https://raw.githubusercontent.com/stultus/kavu/main/images/screenshot-topics-dark.png) | ![Topics and index, light](https://raw.githubusercontent.com/stultus/kavu/main/images/screenshot-topics-light.png) |
 
 
 ## Features
