@@ -7,8 +7,8 @@ licenselink = "https://github.com/stultus/kavu/blob/main/LICENSE"
 description = "A Hugo theme for digital gardens, named after the sacred groves of Kerala. Monospace, terminal-inspired, with note maturity stages, backlinks, and an interactive network graph."
 homepage = "https://github.com/stultus/kavu"
 tags = ["digital-garden", "zettelkasten", "knowledge-base", "monospace", "dark", "responsive", "minimal"]
-features = ["blog", "highlighting", "responsive"]
-min_version = "0.81.0"
+features = ["blog", "highlighting", "responsive", "search"]
+min_version = "0.128.0"
 demosite = "https://stultus.in/notes"
 
 [author]
