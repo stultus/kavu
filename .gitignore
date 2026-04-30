@@ -1,2 +1,5 @@
-exampleSite/resources/*
+.DS_Store
 public/
+exampleSite/public/
+exampleSite/resources/
+exampleSite/.hugo_build.lock
