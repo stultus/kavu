@@ -5,6 +5,15 @@ All notable changes to Kavu are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] — 2026-05-01
+
+### Changed
+
+- `README.md`: image references now use absolute GitHub raw URLs (`https://raw.githubusercontent.com/stultus/kavu/main/images/…`) instead of relative paths, so they render on themes.gohugo.io as well as on GitHub.
+- `config.toml`: `module.hugoVersion.min` bumped from `0.81.0` (inherited from the upstream paulmartins fork) to `0.128.0` to match `theme.toml`. Added `extended = true`.
+
+These are the alignment fixes required by [hugoThemesSiteBuilder](https://github.com/gohugoio/hugoThemesSiteBuilder/blob/main/README.md) before the theme can be submitted to themes.gohugo.io.
+
 ## [1.1.0] — 2026-05-01
 
 The "actually reusable" release. Everything in 1.0.0 worked, but the layout partials hardcoded the original author's name, social handles, GitHub URL, and OpenGraph image, which made adopting the theme awkward. 1.1.0 moves all of that into `Site.Params` with sensible defaults.
@@ -52,5 +61,6 @@ First tagged release under the Kavu name.
 
 Kavu was originally forked from [paulmartins/hugo-digital-garden-theme](https://github.com/paulmartins/hugo-digital-garden-theme), itself inspired by [Maggie Appleton's website](https://maggieappleton.com/). The 1.0.0 release marks the point at which the rewrite is substantial enough to stand under its own name; attribution to both upstream sources is preserved in the README and `theme.toml`.
 
+[1.1.1]: https://github.com/stultus/kavu/releases/tag/v1.1.1
 [1.1.0]: https://github.com/stultus/kavu/releases/tag/v1.1.0
 [1.0.0]: https://github.com/stultus/kavu/releases/tag/v1.0.0
