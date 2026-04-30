@@ -1,10 +1,18 @@
 {{ $currentURL := .RelPermalink }}
+{{ $brandURL := .Site.Params.headerLogoURL | default .Site.BaseURL }}
+{{ $brandText := .Site.Params.headerBrandText | default .Site.Title }}
+{{ $logoLight := .Site.Params.headerLogoLight }}
+{{ $logoDark := .Site.Params.headerLogoDark }}
 <nav style="padding: 1.5rem 0 0; margin-bottom: 1.5rem;">
     <div style="max-width: 90ch; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem 1rem;">
-        <a href="https://stultus.in/" style="display: inline-flex; align-items: center; gap: 0.5rem; border-bottom: none; text-decoration: none; line-height: 1;">
-            <img src="{{ "img/logo-light.png" | relURL }}" alt="stultus" class="nav-logo nav-logo-light" style="height: 36px; width: auto; margin: 0;">
-            <img src="{{ "img/logo-dark.png" | relURL }}" alt="stultus" class="nav-logo nav-logo-dark" style="height: 36px; width: auto; margin: 0; display: none;">
-            <span style="font-family: var(--font-heading); font-weight: 600; font-size: 18px; color: var(--text-primary); line-height: 1;">stultus</span>
+        <a href="{{ $brandURL }}" style="display: inline-flex; align-items: center; gap: 0.5rem; border-bottom: none; text-decoration: none; line-height: 1;">
+            {{ if $logoLight }}
+            <img src="{{ $logoLight | relURL }}" alt="{{ $brandText }}" class="nav-logo nav-logo-light" style="height: 36px; width: auto; margin: 0;">
+            {{ end }}
+            {{ if $logoDark }}
+            <img src="{{ $logoDark | relURL }}" alt="{{ $brandText }}" class="nav-logo nav-logo-dark" style="height: 36px; width: auto; margin: 0;{{ if $logoLight }} display: none;{{ end }}">
+            {{ end }}
+            <span style="font-family: var(--font-heading); font-weight: 600; font-size: 18px; color: var(--text-primary); line-height: 1;">{{ $brandText }}</span>
         </a>
         <ul style="display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; align-items: center;">
             {{ range .Site.Menus.main }}
@@ -16,7 +24,9 @@
     </div>
     <hr style="border: none; border-top: 1px solid var(--border); margin: 0 auto; max-width: 90ch;">
 </nav>
+{{ if and $logoLight $logoDark }}
 <style>
     body.dark-theme .nav-logo-light { display: none !important; }
     body.dark-theme .nav-logo-dark { display: block !important; }
 </style>
+{{ end }}

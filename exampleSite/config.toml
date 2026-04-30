@@ -6,12 +6,19 @@ themesdir = "../../"
 copyright = "Example Gardener"
 relativeURLs = false
 canonifyURLs = false
+enableRobotsTXT = true
 
 [params]
   name = "Example Gardener"
   description = "A demo digital garden built with the Kavu Hugo theme."
   initials = "kavu"
   googleAnalytics = ""
+
+  # Kavu theme params (all optional — the theme renders cleanly without
+  # any of these set. They are listed here to show what's available).
+  author = "Example Gardener"
+  authorURL = "https://example.org/"
+  tagline = "A demo digital garden"
 
   [[params.social]]
     name = "Github"
@@ -65,5 +72,3 @@ canonifyURLs = false
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
-
-enableRobotsTXT = true

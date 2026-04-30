@@ -3,15 +3,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     {{/* ── Title ── */}}
+    {{ $tagline := .Site.Params.tagline }}
     {{ $title := print .Site.Title " | " .Title }}
-    {{ if .IsHome }}{{ $title = print .Site.Title " — Digital Garden by Hrishikesh Bhaskaran" }}{{ end }}
+    {{ if .IsHome }}
+        {{ if $tagline }}
+            {{ $title = print .Site.Title " — " $tagline }}
+        {{ else }}
+            {{ $title = .Site.Title }}
+        {{ end }}
+    {{ end }}
     <title>{{ $title }}</title>
 
-    {{/* ── Determine description ── */}}
+    {{/* ── Description ── */}}
     {{ $desc := .Site.Params.description }}
     {{ with .Description }}{{ $desc = . }}{{ end }}
     {{ if and .IsPage (not .Description) }}{{ with .Params.summary }}{{ $desc = . }}{{ else }}{{ with .Summary }}{{ $desc = . | plainify | truncate 160 }}{{ end }}{{ end }}{{ end }}
-    {{ if .IsHome }}{{ $desc = "The digital garden of Hrishikesh Bhaskaran (stultus) — a growing collection of notes, ideas, and explorations on software engineering, FOSS, language computing, and more." }}{{ end }}
     <meta name="description" content="{{ $desc }}">
 
     {{/* ── Canonical URL ── */}}
@@ -21,11 +27,18 @@
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 
     {{/* ── Author & Keywords ── */}}
-    <meta name="author" content="Hrishikesh Bhaskaran">
-    {{ with .Params.tags }}
-    <meta name="keywords" content="{{ delimit . ", " }}, Hrishikesh Bhaskaran, stultus, digital garden, notes">
-    {{ else }}
-    <meta name="keywords" content="Hrishikesh Bhaskaran, stultus, Hrishi, digital garden, notes, software engineering">
+    {{ $author := .Site.Params.author | default .Site.Title }}
+    <meta name="author" content="{{ $author }}">
+    {{ $globalKeywords := .Site.Params.keywords }}
+    {{ $pageTags := .Params.tags }}
+    {{ if $pageTags }}
+        {{ if $globalKeywords }}
+    <meta name="keywords" content="{{ delimit $pageTags ", " }}, {{ delimit $globalKeywords ", " }}">
+        {{ else }}
+    <meta name="keywords" content="{{ delimit $pageTags ", " }}">
+        {{ end }}
+    {{ else if $globalKeywords }}
+    <meta name="keywords" content="{{ delimit $globalKeywords ", " }}">
     {{ end }}
 
     <!-- Favicon -->
@@ -56,7 +69,7 @@
     <!-- Local Styles -->
     <link rel="stylesheet" type="text/css" href="{{ "css/style.css" | relURL }}">
 
-    {{/* ── JSON-LD Structured Data ── */}}
+    {{/* ── JSON-LD: WebSite (homepage) ── */}}
     {{ if .IsHome }}
     <script type="application/ld+json">
     {
@@ -64,41 +77,20 @@
       "@type": "WebSite",
       "url": "{{ .Site.BaseURL }}",
       "name": "{{ .Site.Title }}",
-      "description": {{ $desc | jsonify }},
+      "description": "{{ $desc }}"
+      {{ with .Site.Params.author }},
       "author": {
         "@type": "Person",
-        "name": "Hrishikesh Bhaskaran",
-        "alternateName": ["stultus", "Hrishi", "Hrishikesh"],
-        "url": "https://stultus.in/about/"
+        "name": "{{ . }}"{{ with $.Site.Params.authorURL }},
+        "url": "{{ . }}"{{ end }}
       }
+      {{ end }}
     }
     </script>
     {{ end }}
 
-    {{ if and .IsPage (eq .File.LogicalName "stultus.md") }}
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Hrishikesh Bhaskaran",
-      "alternateName": ["stultus", "stultusz", "stultuzz", "_stultus", "Hrishi", "Hrishikesh"],
-      "givenName": "Hrishikesh",
-      "familyName": "Bhaskaran",
-      "url": "{{ .Permalink }}",
-      "mainEntityOfPage": "{{ .Permalink }}",
-      "description": "stultus is the online pseudonym of Hrishikesh Bhaskaran, a software engineer and FOSS contributor from Kerala, India. The Latin word means stupid or foolish.",
-      "sameAs": [
-        "https://stultus.in/",
-        "https://stultus.in/about/",
-        "https://github.com/stultus",
-        "https://x.com/_stultus",
-        "https://www.linkedin.com/in/stultus/",
-        "https://instagram.com/stultusz",
-        "https://www.facebook.com/stultus.hrishi"
-      ]
-    }
-    </script>
-    {{ else if .IsPage }}
+    {{/* ── JSON-LD: Article (any non-home page) ── */}}
+    {{ if .IsPage }}
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -107,22 +99,23 @@
         "@type": "WebPage",
         "@id": "{{ .Permalink }}"
       },
-      "headline": {{ .Title | jsonify }},
-      "description": {{ $desc | jsonify }},
-      {{ with .Date }}"datePublished": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",{{ end }}
-      {{ with .Lastmod }}"dateModified": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",{{ end }}
+      "headline": "{{ .Title }}",
+      "description": "{{ $desc }}"
+      {{ with .Date }},"datePublished": "{{ .Format "2006-01-02T15:04:05Z07:00" }}"{{ end }}
+      {{ with .Lastmod }},"dateModified": "{{ .Format "2006-01-02T15:04:05Z07:00" }}"{{ end }}
+      {{ with $.Site.Params.author }},
       "author": {
         "@type": "Person",
-        "name": "Hrishikesh Bhaskaran",
-        "alternateName": ["stultus", "Hrishi"],
-        "url": "https://stultus.in/about/"
+        "name": "{{ . }}"{{ with $.Site.Params.authorURL }},
+        "url": "{{ . }}"{{ end }}
       },
       "publisher": {
         "@type": "Person",
-        "name": "Hrishikesh Bhaskaran",
-        "url": "https://stultus.in/"
+        "name": "{{ . }}"{{ with $.Site.Params.authorURL }},
+        "url": "{{ . }}"{{ end }}
       }
-      {{ with .Params.tags }},"keywords": {{ . | jsonify }}{{ end }}
+      {{ end }}
+      {{ with .Params.tags }},"keywords": [{{ range $i, $t := . }}{{ if $i }}, {{ end }}"{{ $t }}"{{ end }}]{{ end }}
     }
     </script>
     {{ end }}

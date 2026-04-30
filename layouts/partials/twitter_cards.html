@@ -2,16 +2,31 @@
 {{ with .Description }}{{ $desc = . }}{{ end }}
 {{ if and .IsPage (not .Description) }}{{ with .Params.summary }}{{ $desc = . }}{{ else }}{{ with .Summary }}{{ $desc = . | plainify | truncate 160 }}{{ end }}{{ end }}{{ end }}
 
+{{ $tagline := .Site.Params.tagline }}
 {{ $title := .Title }}
-{{ if .IsHome }}{{ $title = print .Site.Title " — Digital Garden by Hrishikesh Bhaskaran" }}{{ end }}
+{{ if .IsHome }}
+    {{ if $tagline }}
+        {{ $title = print .Site.Title " — " $tagline }}
+    {{ else }}
+        {{ $title = .Site.Title }}
+    {{ end }}
+{{ end }}
 
-{{ $img := "https://stultus.in/img/hrishikesh_bhaskaran-bnw.png" }}
+{{ $img := "" }}
+{{ with .Site.Params.defaultOgImage }}{{ $img = . | absURL }}{{ end }}
 {{ with .Params.images }}{{ range first 1 . }}{{ $img = . | absURL }}{{ end }}{{ end }}
 
+{{ $imgAlt := .Site.Params.author | default .Site.Title }}
+{{ $twitterHandle := .Site.Params.twitterHandle }}
+
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@_stultus" />
-<meta name="twitter:creator" content="@_stultus" />
+{{ with $twitterHandle }}
+<meta name="twitter:site" content="{{ . }}" />
+<meta name="twitter:creator" content="{{ . }}" />
+{{ end }}
 <meta name="twitter:title" content="{{ $title }}" />
 <meta name="twitter:description" content="{{ $desc }}" />
-<meta name="twitter:image" content="{{ $img }}" />
-<meta name="twitter:image:alt" content="Hrishikesh Bhaskaran" />
+{{ with $img }}
+<meta name="twitter:image" content="{{ . }}" />
+<meta name="twitter:image:alt" content="{{ $imgAlt }}" />
+{{ end }}
