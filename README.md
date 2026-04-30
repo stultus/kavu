@@ -8,10 +8,10 @@
 
 A monospace, terminal-inspired Hugo theme for digital gardens and personal knowledge bases. Designed around the principles of interconnected note-taking, with support for note maturity stages, network graph visualization, and dense cross-linking.
 
-<!-- TODO: add a network-graph screenshot below once one is captured -->
-![Kavu screenshot](images/screenshot.png)
-
 **Live site**: [stultus.in/notes](https://stultus.in/notes/)
+
+<!-- TODO: capture fresh screenshots of the current Kavu UI (homepage, note page, network graph) and embed them here. The previous screenshot.png/tn.png were leftover from the upstream paulmartins theme and have been removed. -->
+
 
 ## Features
 
