@@ -5,6 +5,30 @@ All notable changes to Kavu are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — 2026-05-01
+
+The "actually reusable" release. Everything in 1.0.0 worked, but the layout partials hardcoded the original author's name, social handles, GitHub URL, and OpenGraph image, which made adopting the theme awkward. 1.1.0 moves all of that into `Site.Params` with sensible defaults.
+
+### Added
+
+- **Configurable site identity.** New optional `Site.Params` keys: `author`, `authorURL`, `tagline`, `twitterHandle`, `defaultOgImage`, `keywords`, `locale`, `headerLogoURL`, `headerBrandText`, `headerLogoLight`, `headerLogoDark`, `footerLinks`, `heroLinks`, `hideThemeCredit`. All optional; the theme renders cleanly with none of them set.
+- **Configurable hero-sidebar links** via `[[params.heroLinks]]`. Replaces the two previously hardcoded links in `layouts/index.html`.
+- **Configurable footer-bottom nav** via `[[params.footerLinks]]`. Replaces the four previously hardcoded links in `layouts/partials/footer.html`.
+- **Footer theme credit.** A small "Built with Kavu — a Hugo theme by stultus" line renders by default at the bottom of every page. Opt out with `hideThemeCredit = true`.
+- **Configurable homepage intro.** `content/_index.md` body renders into the hero section, supporting wikilinks and arbitrary markdown.
+- **Inline-SVG social icons.** Social links from `Site.Params.social` now render via a new `social_icon.html` partial that recognises `github`, `twitter`/`x`, `linkedin`, `instagram`, `medium`, `facebook`, `mastodon`, `rss`, with a generic external-link glyph fallback.
+- **Hugo themes directory submission readiness.** Tightened `theme.toml` metadata, raised `min_version` to `0.128.0`, added the `search` feature flag, generated `images/screenshot.png` (1500×1000) and `images/tn.png` (900×600), initialised the repo as a Hugo Module (`go.mod`), and refreshed `exampleSite/` with five original Kavu sample notes.
+
+### Changed
+
+- `layouts/_default/baseof.html`: replaced deprecated `.Site.LanguageCode` with `.Site.Language.Lang`.
+- `exampleSite/`: removed leftover paulmartins demo content (red panda Garden / Projects / Library / About) and replaced with five Kavu sample notes covering each maturity stage, plus a welcoming homepage intro.
+
+### Fixed
+
+- `enableRobotsTXT = true` was being parsed as `outputs.enableRobotsTXT` because of TOML section scoping (it sat after `[outputs]`). Build now silent.
+- Sample-note dates in `exampleSite/` were all identical, making the All Notes "Recent" sort look broken; now spread so A-Z / Recent / Status produce distinct orderings.
+
 ## [1.0.0] — 2026-05-01
 
 First tagged release under the Kavu name.
@@ -28,4 +52,5 @@ First tagged release under the Kavu name.
 
 Kavu was originally forked from [paulmartins/hugo-digital-garden-theme](https://github.com/paulmartins/hugo-digital-garden-theme), itself inspired by [Maggie Appleton's website](https://maggieappleton.com/). The 1.0.0 release marks the point at which the rewrite is substantial enough to stand under its own name; attribution to both upstream sources is preserved in the README and `theme.toml`.
 
+[1.1.0]: https://github.com/stultus/kavu/releases/tag/v1.1.0
 [1.0.0]: https://github.com/stultus/kavu/releases/tag/v1.0.0
