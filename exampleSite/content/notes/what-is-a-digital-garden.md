@@ -19,6 +19,10 @@ Three things tend to be true of digital gardens:
 
 The metaphor is older than the web. A garden is cultivated, but never finished. It is a place you walk through, not a feed you scroll. Kavu (കാവ്, Malayalam for *sacred grove*) leans into the metaphor.
 
+## A real one in the wild
+
+The Kavu theme was built for, and is used by, [stultus.in/notes](https://stultus.in/notes/) — the digital garden of [Hrishikesh Bhaskaran](https://stultus.in/). Browsing it is the easiest way to see what the theme looks like with a few hundred densely cross-linked notes covering software, philosophy, and storytelling.
+
 ## Related
 
 - [Welcome to Kavu](/notes/welcome-to-kavu/)

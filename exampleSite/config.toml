@@ -28,6 +28,7 @@ enableRobotsTXT = true
   # headerBrandText = "your name"
   # headerLogoLight = "img/logo-light.png"
   # headerLogoDark  = "img/logo-dark.png"
+  # hideThemeCredit = true   # set to true to hide the "Built with Kavu" footer line
 
   # [[params.social]]
   #   name = "GitHub"

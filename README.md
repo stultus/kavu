@@ -113,6 +113,17 @@ Use absolute paths for internal links to ensure the theme's link resolver works 
 [Note Title](/notes/note-slug/)
 ```
 
+## Theme credit
+
+Kavu renders a small "Built with Kavu by stultus" line in the footer by default. If you'd rather not include it, set in your `hugo.toml`:
+
+```toml
+[params]
+  hideThemeCredit = true
+```
+
+Keeping it on is appreciated — it helps other people find the theme.
+
 ## Origin
 
 Kavu was originally forked from [paulmartins/hugo-digital-garden-theme](https://github.com/paulmartins/hugo-digital-garden-theme), which was inspired by [Maggie Appleton's website](https://maggieappleton.com/). It has since been substantially rewritten with a new design system, homepage, note pages, tag system, network graph, and CSS architecture.

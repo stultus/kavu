@@ -28,5 +28,10 @@
             </nav>
         </div>
         {{ end }}
+        {{ if ne .Site.Params.hideThemeCredit true }}
+        <div class="footer-theme-credit">
+            Built with <a href="https://github.com/stultus/kavu" target="_blank" rel="noopener">Kavu</a> &mdash; a Hugo theme by <a href="https://stultus.in" target="_blank" rel="noopener">stultus</a>
+        </div>
+        {{ end }}
     </div>
 </footer>
