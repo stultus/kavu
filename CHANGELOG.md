@@ -5,6 +5,14 @@ All notable changes to Kavu are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] — 2026-05-01
+
+### Changed
+
+- `go.mod`: lowered the `go` directive from `1.26.1` (auto-set by `hugo mod init` from the maintainer's local toolchain) to a conservative `1.21`. Kavu has no Go code, so this is purely a minimum-toolchain hint; the previous value forced module consumers (notably the [hugoThemesSiteBuilder](https://github.com/gohugoio/hugoThemesSiteBuilder) Netlify pipeline) to upgrade their Go toolchain unnecessarily, which in turn pulled in transitive module versions that broke the build environment.
+
+No layout, CSS, JavaScript, or theme behaviour changes.
+
 ## [1.1.1] — 2026-05-01
 
 ### Changed
@@ -61,6 +69,7 @@ First tagged release under the Kavu name.
 
 Kavu was originally forked from [paulmartins/hugo-digital-garden-theme](https://github.com/paulmartins/hugo-digital-garden-theme), itself inspired by [Maggie Appleton's website](https://maggieappleton.com/). The 1.0.0 release marks the point at which the rewrite is substantial enough to stand under its own name; attribution to both upstream sources is preserved in the README and `theme.toml`.
 
+[1.1.2]: https://github.com/stultus/kavu/releases/tag/v1.1.2
 [1.1.1]: https://github.com/stultus/kavu/releases/tag/v1.1.1
 [1.1.0]: https://github.com/stultus/kavu/releases/tag/v1.1.0
 [1.0.0]: https://github.com/stultus/kavu/releases/tag/v1.0.0
