@@ -1,61 +1,37 @@
-baseURL = "https://www.example.com"
+baseURL = "https://example.org/"
 languageCode = "en-us"
-title = "My Digital Garden"
+title = "A Kavu Garden"
 theme = "kavu"
 themesdir = "../../"
-copyright = "Nigalya Ponya ©"
-
+copyright = "Example Gardener"
+relativeURLs = false
+canonifyURLs = false
 
 [params]
-  name = "Nigalya Ponya"
-  description = "Red panda living in the eastern Himalayas."
-  initials = "NP"
+  name = "Example Gardener"
+  description = "A demo digital garden built with the Kavu Hugo theme."
+  initials = "kavu"
   googleAnalytics = ""
 
   [[params.social]]
-    name = "Twitter"
-    link = "#"
-    icon = "fab fa-twitter"
-
-  [[params.social]]
     name = "Github"
-    link = "#"
+    link = "https://github.com/stultus/kavu"
     icon = "fab fa-github"
-
-  [[params.social]]
-    name = "Medium" 
-    link = "#"
-    icon = "fab fa-medium-m"
-
-  [[params.social]]
-    name = "LinkedIn"
-    link = "#"
-    icon = "fab fa-linkedin-in"
 
 
 [menu]
   [[menu.main]]
-    name = "Digital Garden"
-    url = "/garden/"
+    name = "notes"
+    url = "/notes/"
     weight = 1
   [[menu.main]]
-    name = "Projects"
-    url = "/projects/"
+    name = "github"
+    url = "https://github.com/stultus/kavu"
     weight = 2
-  [[menu.main]]
-    name = "Library"
-    url = "/library/"
-    weight = 3
-  [[menu.main]]
-    name = "About"
-    url = "/about/"
-    weight = 4
 
 
 [taxonomies]
-  garden_tags = 'garden_tags'
-  project_tags = 'project_tags'
-  library_tags = 'library_tags'
+  tag = "tags"
 
 
 [markup]
@@ -78,5 +54,16 @@ copyright = "Nigalya Ponya ©"
     taskList = true
     typographer = true
   [markup.highlight]
-    # Choose from https://xyproto.github.io/splash/docs/all.html
-    style = 'monokailight'
+    noClasses = false
+    style = 'monokai'
+
+[outputFormats.JSON]
+  mediaType = "application/json"
+  baseName = "index"
+  isPlainText = true
+  notAlternative = true
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+enableRobotsTXT = true
