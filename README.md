@@ -1,11 +1,15 @@
+<p align="center">
+  <img src="images/kavu-cover.png" alt="Kavu — A digital garden for Hugo" width="320" />
+</p>
+
 # Kavu
 
 > Named after the കാവ് (kavu), the sacred groves of Kerala: small, protected, deliberately overgrown.
 
-<!-- TODO: replace with a dedicated network-graph screenshot once one is captured -->
-![Kavu screenshot](images/screenshot.png)
-
 A monospace, terminal-inspired Hugo theme for digital gardens and personal knowledge bases. Designed around the principles of interconnected note-taking, with support for note maturity stages, network graph visualization, and dense cross-linking.
+
+<!-- TODO: add a network-graph screenshot below once one is captured -->
+![Kavu screenshot](images/screenshot.png)
 
 **Live site**: [stultus.in/notes](https://stultus.in/notes/)
 
