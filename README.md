@@ -10,7 +10,25 @@ A monospace, terminal-inspired Hugo theme for digital gardens and personal knowl
 
 **Live site**: [stultus.in/notes](https://stultus.in/notes/)
 
-<!-- TODO: capture fresh screenshots of the current Kavu UI (homepage, note page, network graph) and embed them here. The previous screenshot.png/tn.png were leftover from the upstream paulmartins theme and have been removed. -->
+## Preview
+
+Homepage — dark and light:
+
+| Dark | Light |
+| :---: | :---: |
+| ![Homepage, dark](images/screenshot-home-dark.png) | ![Homepage, light](images/screenshot-home-light.png) |
+
+Network graph — force-directed view of all notes coloured by maturity:
+
+| Dark | Light |
+| :---: | :---: |
+| ![Network graph, dark](images/screenshot-graph-dark.png) | ![Network graph, light](images/screenshot-graph-light.png) |
+
+Browse-by-topic and the full note index:
+
+| Dark | Light |
+| :---: | :---: |
+| ![Topics and index, dark](images/screenshot-topics-dark.png) | ![Topics and index, light](images/screenshot-topics-light.png) |
 
 
 ## Features
