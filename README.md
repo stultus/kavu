@@ -1,4 +1,9 @@
-# Hugo Digital Garden Theme
+# Kavu
+
+> Named after the കാവ് (kavu), the sacred groves of Kerala: small, protected, deliberately overgrown.
+
+<!-- TODO: replace with a dedicated network-graph screenshot once one is captured -->
+![Kavu screenshot](images/screenshot.png)
 
 A monospace, terminal-inspired Hugo theme for digital gardens and personal knowledge bases. Designed around the principles of interconnected note-taking, with support for note maturity stages, network graph visualization, and dense cross-linking.
 
@@ -54,12 +59,12 @@ Notes use a `status` frontmatter field to indicate maturity:
 
 ```bash
 # Add as a submodule
-git submodule add git@github.com:stultus/hugo-digital-garden-theme.git themes/hugo-digital-garden-theme
+git submodule add git@github.com:stultus/kavu.git themes/kavu
 ```
 
 Set in `hugo.toml`:
 ```toml
-theme = "hugo-digital-garden-theme"
+theme = "kavu"
 themesdir = "./themes"
 ```
 
@@ -88,7 +93,7 @@ Use absolute paths for internal links to ensure the theme's link resolver works 
 
 ## Origin
 
-This theme was originally forked from [paulmartins/hugo-digital-garden-theme](https://github.com/paulmartins/hugo-digital-garden-theme), which was inspired by [Maggie Appleton's website](https://maggieappleton.com/). It has since been substantially rewritten with a new design system, homepage, note pages, tag system, network graph, and CSS architecture.
+Kavu was originally forked from [paulmartins/hugo-digital-garden-theme](https://github.com/paulmartins/hugo-digital-garden-theme), which was inspired by [Maggie Appleton's website](https://maggieappleton.com/). It has since been substantially rewritten with a new design system, homepage, note pages, tag system, network graph, and CSS architecture.
 
 ## License
 
