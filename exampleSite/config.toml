@@ -15,15 +15,28 @@ enableRobotsTXT = true
   googleAnalytics = ""
 
   # Kavu theme params (all optional — the theme renders cleanly without
-  # any of these set. They are listed here to show what's available).
+  # any of these set. They are listed here to show what's available;
+  # replace the example values with your own).
   author = "Example Gardener"
   authorURL = "https://example.org/"
   tagline = "A demo digital garden"
+  # twitterHandle = "@your-handle"
+  # defaultOgImage = "/img/og-cover.png"
+  # keywords = ["digital garden", "notes"]
+  # locale = "en_US"
+  # headerLogoURL = "https://example.org/"
+  # headerBrandText = "your name"
+  # headerLogoLight = "img/logo-light.png"
+  # headerLogoDark  = "img/logo-dark.png"
 
-  [[params.social]]
-    name = "Github"
-    link = "https://github.com/stultus/kavu"
-    icon = "fab fa-github"
+  # [[params.social]]
+  #   name = "GitHub"
+  #   link = "https://github.com/your-username"
+  #   icon = "fab fa-github"
+
+  # [[params.footerLinks]]
+  #   name = "About"
+  #   url = "/about/"
 
 
 [menu]
@@ -31,10 +44,6 @@ enableRobotsTXT = true
     name = "notes"
     url = "/notes/"
     weight = 1
-  [[menu.main]]
-    name = "github"
-    url = "https://github.com/stultus/kavu"
-    weight = 2
 
 
 [taxonomies]
