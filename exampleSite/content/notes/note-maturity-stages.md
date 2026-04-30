@@ -1,7 +1,7 @@
 ---
 title: "Note Maturity Stages"
-date: 2026-04-28
-lastmod: 2026-04-28
+date: 2026-04-23
+lastmod: 2026-04-23
 draft: false
 tags: ["digital-garden", "writing", "process"]
 summary: "Kavu uses three labels — seeding, growing, evergreen — to mark how mature a note is. Lower the bar for publishing; raise it for promotion."

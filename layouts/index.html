@@ -89,8 +89,9 @@
         <button class="garden-action-btn" id="random-note" title="Open a random note">
           <span class="action-icon">&rarr;</span> Random note
         </button>
-        <a href="{{ "/notes/friends/" | relURL }}" class="garden-action-link">Fellow gardeners</a>
-        <a href="{{ "/notes/digital_garden/" | relURL }}" class="garden-action-link">What is a digital garden?</a>
+        {{ range .Site.Params.heroLinks }}
+        <a href="{{ .url }}" class="garden-action-link">{{ .name }}</a>
+        {{ end }}
       </div>
     </div>
 

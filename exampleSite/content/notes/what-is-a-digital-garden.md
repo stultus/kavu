@@ -1,7 +1,7 @@
 ---
 title: "What Is a Digital Garden"
-date: 2026-04-28
-lastmod: 2026-04-28
+date: 2026-04-22
+lastmod: 2026-04-26
 draft: false
 tags: ["digital-garden", "concepts", "writing"]
 summary: "A digital garden is a personal site organised by ideas and links rather than by dates. Notes grow over time."

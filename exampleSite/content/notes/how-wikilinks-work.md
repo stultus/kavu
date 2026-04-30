@@ -1,7 +1,7 @@
 ---
 title: "How Wikilinks Work"
-date: 2026-04-28
-lastmod: 2026-04-28
+date: 2026-04-23
+lastmod: 2026-04-24
 draft: false
 tags: ["kavu", "linking", "writing"]
 summary: "Internal links between notes render with [[bracket]] markers. Use absolute /notes/slug/ paths so the resolver finds the target every time."

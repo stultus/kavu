@@ -1,6 +1,6 @@
 ---
 title: "Welcome to Kavu"
-date: 2026-04-28
+date: 2026-04-22
 lastmod: 2026-04-28
 draft: false
 tags: ["meta", "kavu", "getting-started"]

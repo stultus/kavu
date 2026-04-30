@@ -1,7 +1,7 @@
 ---
 title: "Seedling Example"
-date: 2026-04-28
-lastmod: 2026-04-28
+date: 2026-04-27
+lastmod: 2026-04-27
 draft: false
 tags: ["example", "kavu"]
 summary: "What a half-formed thought looks like in Kavu — published anyway, marked as a seedling."

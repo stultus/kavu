@@ -35,6 +35,11 @@ enableRobotsTXT = true
   #   link = "https://github.com/your-username"
   #   icon = "fab fa-github"
 
+  # heroLinks render in the hero sidebar next to the Random Note button.
+  [[params.heroLinks]]
+    name = "What is a digital garden?"
+    url = "/notes/what-is-a-digital-garden/"
+
   # [[params.footerLinks]]
   #   name = "About"
   #   url = "/about/"
