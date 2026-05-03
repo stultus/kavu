@@ -1,5 +1,8 @@
 {{- $pages := slice -}}
-{{- range .Site.RegularPages -}}
+{{- /* Exclude stub pages (content-adapter-generated link targets) from the
+       network graph so it stays a graph of real notes, not link-target
+       scaffolding. */ -}}
+{{- range where .Site.RegularPages "Params.stub" "!=" true -}}
   {{- $links := slice -}}
   {{- $content := .RawContent -}}
   

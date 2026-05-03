@@ -1,7 +1,11 @@
 {{ define "main" }}
 
 {{- /* ── Precompute data ── */ -}}
+{{- /* Excludes source notes and any stub pages (e.g. content-adapter-generated
+       link targets that aren't meant to appear in the homepage stats, the
+       Recently Tended / Most Connected lists, or the topic browser). */ -}}
 {{- $allNotes := where site.RegularPages "Params.type" "!=" "source" -}}
+{{- $allNotes = where $allNotes "Params.stub" "!=" true -}}
 {{- $totalNotes := len $allNotes -}}
 
 {{- /* Count by status */ -}}
