@@ -177,7 +177,10 @@
   fetch('{{ "index.json" | relURL }}')
     .then(res => res.ok ? res.json() : Promise.reject('Failed to load'))
     .then(data => {
-      const allPages = data.filter(page => page.type !== 'source');
+      // Source notes are first-class members of the graph. The site that
+      // owns the index.json output decides what to include or exclude
+      // upstream of this consumer.
+      const allPages = data;
       if (allPages.length === 0) {
         document.getElementById('graph-container').innerHTML =
           '<p style="text-align:center;padding:3rem;color:var(--text-muted)">No pages found.</p>';
